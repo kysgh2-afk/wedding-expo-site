@@ -53,7 +53,6 @@ export function ExpoList({
   return (
     <section className="space-y-6">
       <div className="flex flex-wrap items-center gap-2">
-        <span className="text-sm font-medium text-slate-500">정렬</span>
         <button
           type="button"
           onClick={() => setSortMode("date")}

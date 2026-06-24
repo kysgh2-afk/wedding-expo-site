@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 const VALID_PATH =
-  /^\/(?:$|seoul|gyeonggi|metropolitan(?:\/[a-z]+)?|local(?:\/[a-z]+)?|admin(?:\/.*)?|api\/.*|sitemap\.xml|robots\.txt|favicon\.png|uploads\/.*)$/;
+  /^\/(?:$|seoul|gyeonggi|metropolitan(?:\/[a-z]+)?|local(?:\/[a-z]+)?|admin(?:\/.*)?|api\/.*|sitemap\.xml|robots\.txt|favicon\.(?:ico|png)|icon\.png|apple-icon\.png|uploads\/.*)$/;
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;

@@ -19,8 +19,9 @@ export const metadata: Metadata = {
   keywords: SEO_HOME.keywords,
   alternates: { canonical: "/" },
   icons: {
-    icon: "/favicon.png",
-    apple: "/favicon.png",
+    icon: [{ url: "/icon.png", type: "image/png" }],
+    shortcut: "/icon.png",
+    apple: "/apple-icon.png",
   },
   openGraph: {
     type: "website",
