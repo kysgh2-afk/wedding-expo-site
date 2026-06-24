@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { formatKoreanDateRange } from "@/lib/date";
@@ -21,6 +23,10 @@ function getStatusLabel(status: string) {
 }
 
 const EXPO_IMAGE_SIZE = 320;
+
+function trackClick(expoId: string) {
+  void fetch(`/api/expos/${expoId}/click`, { method: "POST", keepalive: true });
+}
 
 export function ExpoCard({ expo }: { expo: ExpoCardData }) {
   const dateText = formatKoreanDateRange(expo.startDate, expo.endDate);
@@ -85,11 +91,20 @@ export function ExpoCard({ expo }: { expo: ExpoCardData }) {
         target="_blank"
         rel="noopener noreferrer"
         className="block h-full"
+        onClick={() => trackClick(expo.id)}
       >
         {content}
       </Link>
     );
   }
 
-  return content;
+  return (
+    <button
+      type="button"
+      className="block h-full w-full cursor-pointer text-left"
+      onClick={() => trackClick(expo.id)}
+    >
+      {content}
+    </button>
+  );
 }

@@ -17,6 +17,7 @@ type AdminExpo = {
   imageUrl: string | null;
   linkUrl: string | null;
   isPublished: boolean;
+  clickCount: number;
 };
 
 export function AdminDashboard({ expos }: { expos: AdminExpo[] }) {
@@ -76,6 +77,7 @@ export function AdminDashboard({ expos }: { expos: AdminExpo[] }) {
                 <th className="px-4 py-3 font-semibold">제목</th>
                 <th className="px-4 py-3 font-semibold">일정</th>
                 <th className="px-4 py-3 font-semibold">상태</th>
+                <th className="px-4 py-3 font-semibold">클릭</th>
                 <th className="px-4 py-3 font-semibold">노출</th>
                 <th className="px-4 py-3 font-semibold">관리</th>
               </tr>
@@ -83,7 +85,7 @@ export function AdminDashboard({ expos }: { expos: AdminExpo[] }) {
             <tbody>
               {expos.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-4 py-10 text-center text-slate-500">
+                  <td colSpan={7} className="px-4 py-10 text-center text-slate-500">
                     등록된 박람회가 없습니다. 새 박람회를 추가해 주세요.
                   </td>
                 </tr>
@@ -114,6 +116,7 @@ export function AdminDashboard({ expos }: { expos: AdminExpo[] }) {
                     <td className="px-4 py-3">
                       {STATUS_OPTIONS.find((item) => item.value === expo.status)?.label}
                     </td>
+                    <td className="px-4 py-3 text-slate-600">{expo.clickCount}</td>
                     <td className="px-4 py-3">
                       {expo.isPublished ? (
                         <span className="text-emerald-600">노출</span>

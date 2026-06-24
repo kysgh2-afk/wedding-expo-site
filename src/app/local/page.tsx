@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { RegionPage } from "@/components/RegionPage";
 import { LOCAL_SUBREGIONS } from "@/lib/constants";
 import { getPublishedExpos } from "@/lib/expos";
+import { serializeExpos } from "@/lib/serialize-expos";
 import { LOCAL_SEO, SEO_LOCAL_INDEX, buildPageMetadata } from "@/lib/regions";
 
 export const dynamic = "force-dynamic";
@@ -14,7 +15,7 @@ export default async function LocalIndexPage() {
   return (
     <RegionPage
       config={SEO_LOCAL_INDEX}
-      expos={expos}
+      expos={serializeExpos(expos)}
       breadcrumbs={[
         { label: "홈", href: "/" },
         { label: "지방 웨딩박람회" },

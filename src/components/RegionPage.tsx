@@ -1,9 +1,10 @@
 import Link from "next/link";
-import { ExpoCard } from "@/components/ExpoCard";
+import { ExpoList } from "@/components/ExpoList";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { JsonLd } from "@/components/JsonLd";
 import { RegionNav } from "@/components/RegionNav";
 import { RegionSeoLinks } from "@/components/RegionSeoLinks";
+import type { SerializedExpo } from "@/components/ExpoList";
 import { buildEventListJsonLd } from "@/lib/regions";
 
 type RegionPageConfig = {
@@ -15,19 +16,7 @@ type RegionPageConfig = {
   keywords: string[];
 };
 
-type ExpoItem = {
-  id: string;
-  title: string;
-  location: string;
-  regionGroup: string;
-  regionSub: string;
-  regionLabel: string;
-  startDate: Date;
-  endDate: Date;
-  status: string;
-  imageUrl: string | null;
-  linkUrl: string | null;
-};
+type ExpoItem = SerializedExpo;
 
 type RegionPageProps = {
   config: RegionPageConfig;
@@ -50,7 +39,11 @@ export function RegionPage({
       title: config.h1,
       filter: { regionGroup: "" },
     },
-    expos,
+    expos.map((expo) => ({
+      ...expo,
+      startDate: new Date(expo.startDate),
+      endDate: new Date(expo.endDate),
+    })),
   );
 
   return (
@@ -93,19 +86,10 @@ export function RegionPage({
           </section>
         ) : null}
 
-        <section aria-label={`${config.label} 웨딩박람회 목록`}>
-          {expos.length === 0 ? (
-            <div className="rounded-2xl border border-dashed border-rose-200 bg-white px-6 py-16 text-center text-slate-500">
-              현재 등록된 {config.label} 웨딩박람회 일정이 없습니다. 곧 업데이트됩니다.
-            </div>
-          ) : (
-            <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-              {expos.map((expo) => (
-                <ExpoCard key={expo.id} expo={expo} />
-              ))}
-            </div>
-          )}
-        </section>
+        <ExpoList
+          expos={expos}
+          emptyMessage={`현재 등록된 ${config.label} 웨딩박람회 일정이 없습니다. 곧 업데이트됩니다.`}
+        />
 
         <section className="rounded-2xl bg-white p-6 text-sm leading-relaxed text-slate-600 shadow-sm ring-1 ring-rose-100">
           <h2 className="text-lg font-bold text-slate-900">

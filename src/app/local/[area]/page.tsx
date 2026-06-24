@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { RegionPage } from "@/components/RegionPage";
 import { LOCAL_SUBREGIONS, type LocalSubregion } from "@/lib/constants";
 import { getPublishedExpos } from "@/lib/expos";
+import { serializeExpos } from "@/lib/serialize-expos";
 import { LOCAL_SEO, SEO_LOCAL_INDEX, buildPageMetadata } from "@/lib/regions";
 
 export const dynamic = "force-dynamic";
@@ -35,7 +36,7 @@ export default async function LocalAreaPage({ params }: PageProps) {
   return (
     <RegionPage
       config={config}
-      expos={expos}
+      expos={serializeExpos(expos)}
       breadcrumbs={[
         { label: "홈", href: "/" },
         { label: "지방", href: SEO_LOCAL_INDEX.path },

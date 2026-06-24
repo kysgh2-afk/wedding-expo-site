@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getPublishedExpos } from "@/lib/expos";
+import { serializeExpos } from "@/lib/serialize-expos";
 import { HomeJsonLd, SiteHeader } from "@/components/SiteHeader";
 import { ExpoList } from "@/components/ExpoList";
 import { InfoSections } from "@/components/InfoSections";
@@ -20,7 +21,7 @@ export default async function HomePage() {
       <SiteHeader />
       <main className="mx-auto max-w-6xl space-y-10 px-4 py-10 sm:px-6">
         <RegionNav activePath="/" />
-        <ExpoList expos={expos} />
+        <ExpoList expos={serializeExpos(expos)} />
         <RegionSeoLinks />
         <InfoSections />
       </main>

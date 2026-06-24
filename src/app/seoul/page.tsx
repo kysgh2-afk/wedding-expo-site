@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { RegionPage } from "@/components/RegionPage";
 import { getPublishedExpos } from "@/lib/expos";
+import { serializeExpos } from "@/lib/serialize-expos";
 import { SEO_SEOUL, buildPageMetadata } from "@/lib/regions";
 
 export const dynamic = "force-dynamic";
@@ -13,7 +14,7 @@ export default async function SeoulPage() {
   return (
     <RegionPage
       config={SEO_SEOUL}
-      expos={expos}
+      expos={serializeExpos(expos)}
       breadcrumbs={[
         { label: "홈", href: "/" },
         { label: "서울 웨딩박람회" },

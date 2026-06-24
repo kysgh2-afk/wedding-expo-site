@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { RegionPage } from "@/components/RegionPage";
 import { METROPOLITAN_CITIES } from "@/lib/constants";
 import { getPublishedExpos } from "@/lib/expos";
+import { serializeExpos } from "@/lib/serialize-expos";
 import { METROPOLITAN_SEO, SEO_METROPOLITAN_INDEX, buildPageMetadata } from "@/lib/regions";
 
 export const dynamic = "force-dynamic";
@@ -14,7 +15,7 @@ export default async function MetropolitanIndexPage() {
   return (
     <RegionPage
       config={SEO_METROPOLITAN_INDEX}
-      expos={expos}
+      expos={serializeExpos(expos)}
       breadcrumbs={[
         { label: "홈", href: "/" },
         { label: "광역시 웨딩박람회" },

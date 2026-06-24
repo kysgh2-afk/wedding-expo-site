@@ -12,6 +12,6 @@ export async function getPublishedExpos(filter?: ExpoFilter) {
       ...(filter?.regionGroup ? { regionGroup: filter.regionGroup } : {}),
       ...(filter?.regionSub ? { regionSub: filter.regionSub } : {}),
     },
-    orderBy: [{ sortOrder: "asc" }, { startDate: "asc" }],
+    orderBy: [{ startDate: "asc" }, { endDate: "asc" }],
   });
 }
