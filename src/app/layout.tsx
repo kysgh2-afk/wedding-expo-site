@@ -18,6 +18,10 @@ export const metadata: Metadata = {
   description: SEO_HOME.description,
   keywords: SEO_HOME.keywords,
   alternates: { canonical: "/" },
+  icons: {
+    icon: "/favicon.png",
+    apple: "/favicon.png",
+  },
   openGraph: {
     type: "website",
     locale: "ko_KR",
