@@ -1,0 +1,26 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Expo {
+  id          String   @id @default(cuid())
+  title       String
+  location    String
+  regionGroup String   @default("seoul")
+  regionSub   String   @default("")
+  regionLabel String   @default("서울")
+  startDate   DateTime
+  endDate     DateTime
+  status      String   @default("open")
+  imageUrl    String?
+  linkUrl     String?
+  sortOrder   Int      @default(0)
+  isPublished Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
