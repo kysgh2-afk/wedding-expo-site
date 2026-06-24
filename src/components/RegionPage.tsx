@@ -58,25 +58,17 @@ export function RegionPage({
       <JsonLd data={jsonLd} />
       <header className="border-b border-rose-100 bg-white/90 backdrop-blur">
         <div className="mx-auto max-w-6xl px-4 py-5 sm:px-6">
-          <div className="flex items-start justify-between gap-4">
-            <div className="space-y-3">
-              <Breadcrumbs items={breadcrumbs} />
-              <div>
-                <p className="text-sm font-medium text-rose-500">매주 업데이트</p>
-                <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
-                  {config.h1}
-                </h1>
-                <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate-600">
-                  {config.intro}
-                </p>
-              </div>
+          <div className="space-y-3">
+            <Breadcrumbs items={breadcrumbs} />
+            <div>
+              <p className="text-sm font-medium text-rose-500">매주 업데이트</p>
+              <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+                {config.h1}
+              </h1>
+              <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate-600">
+                {config.intro}
+              </p>
             </div>
-            <Link
-              href="/admin"
-              className="shrink-0 rounded-full border border-rose-200 px-4 py-2 text-sm font-medium text-rose-700 transition hover:bg-rose-50"
-            >
-              관리자
-            </Link>
           </div>
         </div>
       </header>
