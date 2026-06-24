@@ -20,24 +20,33 @@ function getStatusLabel(status: string) {
   return STATUS_OPTIONS.find((item) => item.value === status)?.label ?? status;
 }
 
+const EXPO_IMAGE_SIZE = 320;
+
 export function ExpoCard({ expo }: { expo: ExpoCardData }) {
   const dateText = formatKoreanDateRange(expo.startDate, expo.endDate);
   const statusLabel = getStatusLabel(expo.status);
   const isOpen = expo.status === "open";
 
   const content = (
-    <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-rose-100 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
-      <div className="relative aspect-[16/10] overflow-hidden bg-rose-50">
+    <article className="group mx-auto flex h-full w-full max-w-[320px] flex-col overflow-hidden rounded-2xl border border-rose-100 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+      <div
+        className="relative mx-auto overflow-hidden bg-rose-50"
+        style={{ width: EXPO_IMAGE_SIZE, height: EXPO_IMAGE_SIZE, maxWidth: "100%" }}
+      >
         {expo.imageUrl ? (
           <Image
             src={expo.imageUrl}
             alt={expo.title}
-            fill
-            className="object-cover transition duration-300 group-hover:scale-105"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            width={EXPO_IMAGE_SIZE}
+            height={EXPO_IMAGE_SIZE}
+            className="h-[320px] w-[320px] max-w-full object-cover transition duration-300 group-hover:scale-105"
+            sizes={`${EXPO_IMAGE_SIZE}px`}
           />
         ) : (
-          <div className="flex h-full items-center justify-center bg-gradient-to-br from-rose-100 to-amber-50 text-sm text-rose-400">
+          <div
+            className="flex items-center justify-center bg-gradient-to-br from-rose-100 to-amber-50 text-sm text-rose-400"
+            style={{ width: EXPO_IMAGE_SIZE, height: EXPO_IMAGE_SIZE, maxWidth: "100%" }}
+          >
             웨딩박람회
           </div>
         )}
