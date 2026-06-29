@@ -7,7 +7,9 @@ import { RegionNav } from "@/components/RegionNav";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { getPublishedArticle } from "@/lib/articles";
 import { formatKoreanDate } from "@/lib/date";
+import { articleExcerpt } from "@/lib/html";
 import { getSiteUrl } from "@/lib/regions";
+import { ArticleBody } from "@/components/ArticleBody";
 
 export const dynamic = "force-dynamic";
 
@@ -25,7 +27,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const siteUrl = getSiteUrl();
   const url = `${siteUrl}/content/${article.id}`;
-  const description = article.excerpt || article.body.slice(0, 150);
+  const description = articleExcerpt(article.body, article.excerpt);
 
   return {
     title: `${article.title} | 웨딩 콘텐츠`,
@@ -92,9 +94,7 @@ export default async function ContentDetailPage({ params }: PageProps) {
               </p>
             ) : null}
 
-            <div className="whitespace-pre-wrap text-base leading-8 text-slate-700">
-              {article.body}
-            </div>
+            <ArticleBody html={article.body} />
           </div>
         </article>
 

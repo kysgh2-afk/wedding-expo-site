@@ -1,13 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import { formatKoreanDate } from "@/lib/date";
+import { articleExcerpt } from "@/lib/html";
 import type { SerializedArticle } from "@/lib/serialize-articles";
 
 const CONTENT_IMAGE_SIZE = 320;
 
 export function ContentCard({ article }: { article: SerializedArticle }) {
   const dateText = formatKoreanDate(new Date(article.createdAt));
-  const summary = article.excerpt || article.body.slice(0, 120);
+  const summary = articleExcerpt(article.body, article.excerpt);
 
   return (
     <Link href={`/content/${article.id}`} className="block h-full">

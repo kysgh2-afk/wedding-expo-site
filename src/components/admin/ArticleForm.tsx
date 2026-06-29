@@ -1,9 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import { RichTextEditor, isEditorContentEmpty } from "@/components/admin/RichTextEditor";
 
 type ArticleFormData = {
   id?: string;
@@ -65,6 +65,12 @@ export function ArticleForm({ initialData, mode }: ArticleFormProps) {
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
+
+    if (isEditorContentEmpty(form.body)) {
+      setError("본문 내용을 입력해 주세요.");
+      return;
+    }
+
     setSaving(true);
     setError("");
 
@@ -96,7 +102,7 @@ export function ArticleForm({ initialData, mode }: ArticleFormProps) {
           {mode === "create" ? "새 콘텐츠 작성" : "콘텐츠 수정"}
         </h1>
         <p className="mt-1 text-sm text-slate-500">
-          웨딩 관련 글과 대표 이미지를 등록하세요.
+          사진, 글자색, 배경색, 제목 스타일 등 블로그처럼 자유롭게 작성할 수 있습니다.
         </p>
       </div>
 
@@ -122,16 +128,13 @@ export function ArticleForm({ initialData, mode }: ArticleFormProps) {
           />
         </label>
 
-        <label className="space-y-2">
+        <div className="space-y-2">
           <span className="text-sm font-medium text-slate-700">본문</span>
-          <textarea
+          <RichTextEditor
             value={form.body}
-            onChange={(event) => updateField("body", event.target.value)}
-            className="min-h-72 w-full rounded-xl border border-rose-200 px-4 py-3 outline-none focus:ring-2 focus:ring-rose-200"
-            placeholder="웨딩 관련 글 내용을 입력하세요."
-            required
+            onChange={(html) => updateField("body", html)}
           />
-        </label>
+        </div>
 
         <label className="space-y-2">
           <span className="text-sm font-medium text-slate-700">정렬 순서</span>
@@ -144,7 +147,7 @@ export function ArticleForm({ initialData, mode }: ArticleFormProps) {
         </label>
 
         <div className="space-y-3">
-          <span className="text-sm font-medium text-slate-700">대표 이미지</span>
+          <span className="text-sm font-medium text-slate-700">대표 이미지 (목록 카드용)</span>
           <div className="flex flex-wrap items-center gap-4">
             <label className="cursor-pointer rounded-xl bg-rose-600 px-4 py-2 text-sm font-semibold text-white hover:bg-rose-700">
               {uploading ? "업로드 중..." : "이미지 업로드"}
