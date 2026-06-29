@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { formatKoreanDateRange } from "@/lib/date";
 import { STATUS_OPTIONS } from "@/lib/constants";
-import { AdminNav } from "@/components/admin/AdminNav";
 
 type AdminExpo = {
   id: string;
@@ -39,8 +38,6 @@ export function AdminDashboard({ expos }: { expos: AdminExpo[] }) {
 
   return (
     <div className="space-y-6">
-      <AdminNav active="expos" />
-
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">박람회 관리</h1>

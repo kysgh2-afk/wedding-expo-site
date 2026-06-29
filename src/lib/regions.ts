@@ -91,24 +91,6 @@ export const SEO_LOCAL_INDEX: RegionPageBase = {
   filter: { regionGroup: "local" },
 };
 
-export const SEO_CONTENT = {
-  path: "/content",
-  label: "콘텐츠",
-  h1: "웨딩 콘텐츠",
-  title: "웨딩 콘텐츠 | 결혼 준비·박람회 꿀팁",
-  description:
-    "웨딩박람회 방문 팁, 결혼 준비 정보, 웨딩 관련 유용한 글을 모았습니다. 사진과 함께 읽기 쉬운 웨딩 콘텐츠를 확인하세요.",
-  keywords: [
-    "웨딩 콘텐츠",
-    "결혼 준비",
-    "웨딩박람회 꿀팁",
-    "웨딩 정보",
-    "결혼 준비 블로그",
-  ],
-  intro:
-    "웨딩박람회와 결혼 준비에 도움이 되는 글을 모았습니다. 사진과 함께 차근차근 읽어보세요.",
-};
-
 export const METROPOLITAN_SEO: Record<MetropolitanCity, RegionPageBase> = {
   busan: {
     path: "/metropolitan/busan",
@@ -245,7 +227,6 @@ export const ALL_REGION_PAGES = [
   ...Object.values(METROPOLITAN_SEO),
   SEO_LOCAL_INDEX,
   ...Object.values(LOCAL_SEO),
-  SEO_CONTENT,
 ];
 
 export function buildPageMetadata(page: {

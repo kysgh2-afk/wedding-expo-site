@@ -10,7 +10,6 @@ import {
   SEO_LOCAL_INDEX,
   SEO_METROPOLITAN_INDEX,
   SEO_SEOUL,
-  SEO_CONTENT,
 } from "@/lib/regions";
 
 type RegionNavProps = {
@@ -46,9 +45,6 @@ export function RegionNav({ activePath = "/" }: RegionNavProps) {
         </Link>
         <Link href={SEO_LOCAL_INDEX.path} className={navClass(activePath.startsWith("/local"))}>
           지방
-        </Link>
-        <Link href={SEO_CONTENT.path} className={navClass(activePath.startsWith("/content"))}>
-          콘텐츠
         </Link>
       </div>
 
