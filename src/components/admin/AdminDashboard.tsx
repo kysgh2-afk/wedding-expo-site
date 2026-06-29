@@ -125,7 +125,21 @@ export function AdminDashboard({ expos }: { expos: AdminExpo[] }) {
                       )}
                     </td>
                     <td className="px-4 py-3">
-                      <div className="flex gap-2">
+                      <div className="flex flex-wrap gap-2">
+                        {expo.linkUrl ? (
+                          <a
+                            href={expo.linkUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="rounded-lg border border-rose-200 px-3 py-1.5 text-rose-700 hover:bg-rose-50"
+                          >
+                            링크
+                          </a>
+                        ) : (
+                          <span className="rounded-lg border border-dashed border-slate-200 px-3 py-1.5 text-slate-400">
+                            링크 없음
+                          </span>
+                        )}
                         <Link
                           href={`/admin/expos/${expo.id}/edit`}
                           className="rounded-lg bg-rose-50 px-3 py-1.5 text-rose-700 hover:bg-rose-100"
