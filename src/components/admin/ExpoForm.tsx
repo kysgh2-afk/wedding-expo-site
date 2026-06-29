@@ -10,6 +10,7 @@ import {
   getSubregionOptions,
 } from "@/lib/constants";
 import { formatInputDate } from "@/lib/date";
+import { uploadImageFile } from "@/lib/upload-image";
 
 type ExpoFormData = {
   id?: string;
@@ -92,23 +93,15 @@ export function ExpoForm({ initialData, mode }: ExpoFormProps) {
     setUploading(true);
     setError("");
 
-    const formData = new FormData();
-    formData.append("file", file);
-
-    const response = await fetch("/api/upload", {
-      method: "POST",
-      body: formData,
-    });
-
-    const data = await response.json();
+    const result = await uploadImageFile(file);
     setUploading(false);
 
-    if (!response.ok) {
-      setError(data.error || "이미지 업로드에 실패했습니다.");
+    if (!result.ok) {
+      setError(result.error);
       return;
     }
 
-    updateField("imageUrl", data.url);
+    updateField("imageUrl", result.url);
   }
 
   async function handleSubmit(event: FormEvent) {

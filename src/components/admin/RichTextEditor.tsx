@@ -11,6 +11,7 @@ import Highlight from "@tiptap/extension-highlight";
 import Placeholder from "@tiptap/extension-placeholder";
 import { useCallback, useRef, useState } from "react";
 import { plainTextToHtml } from "@/lib/html";
+import { uploadImageFile } from "@/lib/upload-image";
 
 type RichTextEditorProps = {
   value: string;
@@ -88,24 +89,15 @@ export function RichTextEditor({
       setUploading(true);
       setUploadError("");
 
-      const formData = new FormData();
-      formData.append("file", file);
-
       try {
-        const response = await fetch("/api/upload", {
-          method: "POST",
-          body: formData,
-        });
-        const data = await response.json();
+        const result = await uploadImageFile(file);
 
-        if (!response.ok) {
-          setUploadError(data.error || "이미지 업로드에 실패했습니다.");
+        if (!result.ok) {
+          setUploadError(result.error);
           return;
         }
 
-        editor.chain().focus().setImage({ src: data.url, alt: file.name }).run();
-      } catch {
-        setUploadError("이미지 업로드에 실패했습니다.");
+        editor.chain().focus().setImage({ src: result.url, alt: file.name }).run();
       } finally {
         setUploading(false);
       }
