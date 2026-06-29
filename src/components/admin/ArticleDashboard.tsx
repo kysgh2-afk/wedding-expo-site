@@ -3,25 +3,20 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { formatKoreanDateRange } from "@/lib/date";
-import { STATUS_OPTIONS } from "@/lib/constants";
+import { formatKoreanDate } from "@/lib/date";
 import { AdminNav } from "@/components/admin/AdminNav";
 
-type AdminExpo = {
+type AdminArticle = {
   id: string;
   title: string;
-  location: string;
-  regionLabel: string;
-  startDate: string;
-  endDate: string;
-  status: string;
+  excerpt: string;
   imageUrl: string | null;
-  linkUrl: string | null;
+  sortOrder: number;
   isPublished: boolean;
-  clickCount: number;
+  createdAt: string;
 };
 
-export function AdminDashboard({ expos }: { expos: AdminExpo[] }) {
+export function ArticleDashboard({ articles }: { articles: AdminArticle[] }) {
   const router = useRouter();
 
   async function handleLogout() {
@@ -31,35 +26,35 @@ export function AdminDashboard({ expos }: { expos: AdminExpo[] }) {
   }
 
   async function handleDelete(id: string) {
-    if (!confirm("이 박람회를 삭제하시겠습니까?")) return;
+    if (!confirm("이 글을 삭제하시겠습니까?")) return;
 
-    const response = await fetch(`/api/expos/${id}`, { method: "DELETE" });
+    const response = await fetch(`/api/articles/${id}`, { method: "DELETE" });
     if (response.ok) router.refresh();
   }
 
   return (
     <div className="space-y-6">
-      <AdminNav active="expos" />
+      <AdminNav active="articles" />
 
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">박람회 관리</h1>
+          <h1 className="text-2xl font-bold text-slate-900">콘텐츠 관리</h1>
           <p className="mt-1 text-sm text-slate-500">
-            이미지, 일정, 링크를 추가하고 매주 업데이트하세요.
+            웨딩 관련 글과 이미지를 작성하고 관리하세요.
           </p>
         </div>
         <div className="flex gap-2">
           <Link
-            href="/"
+            href="/content"
             className="rounded-xl border border-rose-200 px-4 py-2 text-sm font-medium text-rose-700 hover:bg-rose-50"
           >
-            사이트 보기
+            콘텐츠 보기
           </Link>
           <Link
-            href="/admin/expos/new"
+            href="/admin/articles/new"
             className="rounded-xl bg-rose-600 px-4 py-2 text-sm font-semibold text-white hover:bg-rose-700"
           >
-            + 새 박람회
+            + 새 글 작성
           </Link>
           <button
             type="button"
@@ -78,29 +73,27 @@ export function AdminDashboard({ expos }: { expos: AdminExpo[] }) {
               <tr>
                 <th className="px-4 py-3 font-semibold">이미지</th>
                 <th className="px-4 py-3 font-semibold">제목</th>
-                <th className="px-4 py-3 font-semibold">일정</th>
-                <th className="px-4 py-3 font-semibold">상태</th>
-                <th className="px-4 py-3 font-semibold">클릭</th>
+                <th className="px-4 py-3 font-semibold">작성일</th>
                 <th className="px-4 py-3 font-semibold">노출</th>
                 <th className="px-4 py-3 font-semibold">관리</th>
               </tr>
             </thead>
             <tbody>
-              {expos.length === 0 ? (
+              {articles.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="px-4 py-10 text-center text-slate-500">
-                    등록된 박람회가 없습니다. 새 박람회를 추가해 주세요.
+                  <td colSpan={5} className="px-4 py-10 text-center text-slate-500">
+                    등록된 콘텐츠가 없습니다. 새 글을 작성해 주세요.
                   </td>
                 </tr>
               ) : (
-                expos.map((expo) => (
-                  <tr key={expo.id} className="border-t border-rose-50">
+                articles.map((article) => (
+                  <tr key={article.id} className="border-t border-rose-50">
                     <td className="px-4 py-3">
                       <div className="relative h-14 w-20 overflow-hidden rounded-lg bg-rose-50">
-                        {expo.imageUrl ? (
+                        {article.imageUrl ? (
                           <Image
-                            src={expo.imageUrl}
-                            alt={expo.title}
+                            src={article.imageUrl}
+                            alt={article.title}
                             fill
                             className="object-cover"
                           />
@@ -108,20 +101,16 @@ export function AdminDashboard({ expos }: { expos: AdminExpo[] }) {
                       </div>
                     </td>
                     <td className="px-4 py-3">
-                      <p className="font-semibold text-slate-900">{expo.title}</p>
-                      <p className="text-xs text-slate-500">
-                        {expo.regionLabel} · {expo.location}
-                      </p>
+                      <p className="font-semibold text-slate-900">{article.title}</p>
+                      {article.excerpt ? (
+                        <p className="mt-1 line-clamp-2 text-xs text-slate-500">{article.excerpt}</p>
+                      ) : null}
                     </td>
                     <td className="px-4 py-3 text-slate-600">
-                      {formatKoreanDateRange(new Date(expo.startDate), new Date(expo.endDate))}
+                      {formatKoreanDate(new Date(article.createdAt))}
                     </td>
                     <td className="px-4 py-3">
-                      {STATUS_OPTIONS.find((item) => item.value === expo.status)?.label}
-                    </td>
-                    <td className="px-4 py-3 text-slate-600">{expo.clickCount}</td>
-                    <td className="px-4 py-3">
-                      {expo.isPublished ? (
+                      {article.isPublished ? (
                         <span className="text-emerald-600">노출</span>
                       ) : (
                         <span className="text-slate-400">숨김</span>
@@ -129,29 +118,22 @@ export function AdminDashboard({ expos }: { expos: AdminExpo[] }) {
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex flex-wrap gap-2">
-                        {expo.linkUrl ? (
-                          <a
-                            href={expo.linkUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="rounded-lg border border-rose-200 px-3 py-1.5 text-rose-700 hover:bg-rose-50"
-                          >
-                            링크
-                          </a>
-                        ) : (
-                          <span className="rounded-lg border border-dashed border-slate-200 px-3 py-1.5 text-slate-400">
-                            링크 없음
-                          </span>
-                        )}
                         <Link
-                          href={`/admin/expos/${expo.id}/edit`}
+                          href={`/content/${article.id}`}
+                          target="_blank"
+                          className="rounded-lg border border-rose-200 px-3 py-1.5 text-rose-700 hover:bg-rose-50"
+                        >
+                          보기
+                        </Link>
+                        <Link
+                          href={`/admin/articles/${article.id}/edit`}
                           className="rounded-lg bg-rose-50 px-3 py-1.5 text-rose-700 hover:bg-rose-100"
                         >
                           수정
                         </Link>
                         <button
                           type="button"
-                          onClick={() => handleDelete(expo.id)}
+                          onClick={() => handleDelete(article.id)}
                           className="rounded-lg bg-slate-100 px-3 py-1.5 text-slate-600 hover:bg-slate-200"
                         >
                           삭제
