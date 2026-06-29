@@ -1,4 +1,4 @@
-import { sanitizeArticleHtml } from "@/lib/html";
+import { sanitizeArticleHtml } from "@/lib/sanitize-html";
 
 type ArticleBodyProps = {
   html: string;

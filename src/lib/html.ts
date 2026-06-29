@@ -1,29 +1,3 @@
-import DOMPurify from "isomorphic-dompurify";
-
-const ALLOWED_TAGS = [
-  "p",
-  "br",
-  "strong",
-  "b",
-  "em",
-  "i",
-  "u",
-  "s",
-  "h2",
-  "h3",
-  "ul",
-  "ol",
-  "li",
-  "blockquote",
-  "a",
-  "img",
-  "hr",
-  "span",
-  "mark",
-];
-
-const ALLOWED_ATTR = ["href", "src", "alt", "target", "rel", "style", "class"];
-
 export function stripHtml(html: string) {
   return html
     .replace(/<[^>]*>/g, " ")
@@ -42,13 +16,9 @@ export function plainTextToHtml(text: string) {
     .join("");
 }
 
-export function sanitizeArticleHtml(html: string) {
-  const normalized = html.includes("<") ? html : plainTextToHtml(html);
-
-  return DOMPurify.sanitize(normalized, {
-    ALLOWED_TAGS,
-    ALLOWED_ATTR,
-  });
+export function articleExcerpt(body: string, excerpt?: string) {
+  if (excerpt?.trim()) return excerpt.trim();
+  return stripHtml(body).slice(0, 150);
 }
 
 function escapeHtml(value: string) {
@@ -57,9 +27,4 @@ function escapeHtml(value: string) {
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
-}
-
-export function articleExcerpt(body: string, excerpt?: string) {
-  if (excerpt?.trim()) return excerpt.trim();
-  return stripHtml(body).slice(0, 150);
 }
