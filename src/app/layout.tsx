@@ -17,7 +17,12 @@ export const metadata: Metadata = {
   },
   description: SEO_HOME.description,
   keywords: SEO_HOME.keywords,
-  alternates: { canonical: "/" },
+  alternates: {
+    canonical: "/",
+    types: {
+      "application/rss+xml": `${getSiteUrl()}/rss.xml`,
+    },
+  },
   icons: {
     icon: [{ url: "/icon.png", type: "image/png" }],
     shortcut: "/icon.png",

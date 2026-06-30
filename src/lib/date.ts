@@ -15,3 +15,7 @@ export function formatKoreanDateRange(start: Date, end: Date) {
 export function formatInputDate(date: Date) {
   return format(date, "yyyy-MM-dd");
 }
+
+export function formatKoreanDate(date: Date) {
+  return format(date, "yyyy년 M월 d일", { locale: ko });
+}
