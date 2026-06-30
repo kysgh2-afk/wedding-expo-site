@@ -21,6 +21,9 @@ export function SiteFooter() {
         <p className="text-center text-sm text-slate-500">
           © {new Date().getFullYear()} {SITE_NAME} · 매주 업데이트
         </p>
+        <p className="text-center text-xs text-slate-400">
+          본 페이지는 파트너 제휴 링크를 통해 수익이 발생할 수 있습니다.
+        </p>
       </div>
     </footer>
   );

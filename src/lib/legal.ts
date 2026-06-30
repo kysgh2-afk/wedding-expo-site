@@ -42,11 +42,13 @@ export const SEO_CONTACT: LegalPageSeo = {
 
 export const LEGAL_PAGES = [SEO_ABOUT, SEO_PRIVACY, SEO_CONTACT];
 
+export const SITE_CONTACT_EMAIL = "kysgh2@naver.com";
+
 export function getContactEmail() {
   return (
     process.env.CONTACT_EMAIL?.trim() ||
     process.env.NEXT_PUBLIC_CONTACT_EMAIL?.trim() ||
-    null
+    SITE_CONTACT_EMAIL
   );
 }
 

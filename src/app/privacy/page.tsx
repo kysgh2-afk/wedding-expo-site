@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import { LegalPageLayout } from "@/components/LegalPageLayout";
-import { SEO_PRIVACY, buildLegalMetadata } from "@/lib/legal";
+import { SEO_PRIVACY, buildLegalMetadata, getContactEmail } from "@/lib/legal";
 import { getSiteUrl, SITE_NAME } from "@/lib/regions";
 
 export const metadata: Metadata = buildLegalMetadata(SEO_PRIVACY);
 
 export default function PrivacyPage() {
   const siteUrl = getSiteUrl();
+  const contactEmail = getContactEmail();
   const updatedAt = "2026년 6월 28일";
 
   return (
@@ -83,6 +84,9 @@ export default function PrivacyPage() {
         <h2>7. 개인정보 보호책임자</h2>
         <p>
           사이트명: {SITE_NAME}
+          <br />
+          이메일:{" "}
+          <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
           <br />
           문의: <a href="/contact">문의하기 페이지</a>
         </p>

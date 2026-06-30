@@ -24,18 +24,14 @@ export default function ContactPage() {
 
       <section>
         <h2>이메일 문의</h2>
-        {contactEmail ? (
-          <p>
-            <a href={`mailto:${contactEmail}`} className="font-semibold text-rose-700 hover:underline">
-              {contactEmail}
-            </a>
-          </p>
-        ) : (
-          <p className="rounded-2xl bg-rose-50 px-4 py-3 text-sm text-slate-600">
-            운영자 이메일이 곧 등록됩니다. AdSense 심사 전에는 Google AdSense 신청 시 사용하는
-            연락처로 문의를 받을 수 있습니다.
-          </p>
-        )}
+        <p>
+          아래 이메일로 문의해 주세요.
+        </p>
+        <p>
+          <a href={`mailto:${contactEmail}`} className="font-semibold text-rose-700 hover:underline">
+            {contactEmail}
+          </a>
+        </p>
       </section>
 
       <section>
