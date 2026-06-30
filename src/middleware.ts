@@ -5,6 +5,15 @@ const VALID_PATH =
   /^\/(?:$|about|contact|privacy|seoul|gyeonggi|metropolitan(?:\/[a-z]+)?|local(?:\/[a-z]+)?|admin(?:\/.*)?|api\/.*|sitemap\.xml|robots\.txt|ads\.txt|favicon\.(?:ico|png)|icon\.png|apple-icon\.png|uploads\/.*)$/;
 
 export function middleware(request: NextRequest) {
+  const host = request.headers.get("host") ?? "";
+  const hostname = host.split(":")[0];
+
+  if (hostname.startsWith("www.")) {
+    const redirectUrl = request.nextUrl.clone();
+    redirectUrl.hostname = hostname.slice(4);
+    return NextResponse.redirect(redirectUrl, 301);
+  }
+
   const { pathname } = request.nextUrl;
 
   if (pathname.startsWith("/_next")) {

@@ -4,7 +4,17 @@ import type { MetropolitanCity, LocalSubregion } from "@/lib/constants";
 export const SITE_NAME = "웨딩박람회 일정 모음";
 
 export function getSiteUrl() {
-  return process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const raw = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+
+  try {
+    const url = new URL(raw);
+    if (url.hostname.startsWith("www.")) {
+      url.hostname = url.hostname.slice(4);
+    }
+    return url.origin;
+  } catch {
+    return raw.replace(/^https?:\/\/www\./i, (match) => match.replace("www.", ""));
+  }
 }
 
 type RegionPageBase = {
