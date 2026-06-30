@@ -30,11 +30,13 @@ export function HomeJsonLd({ expoCount }: { expoCount: number }) {
         name: SITE_NAME,
         description: SEO_HOME.description,
         inLanguage: "ko-KR",
-        potentialAction: {
-          "@type": "SearchAction",
-          target: `${siteUrl}/?q={search_term_string}`,
-          "query-input": "required name=search_term_string",
-        },
+      },
+      {
+        "@type": "Organization",
+        "@id": `${siteUrl}/#organization`,
+        name: SITE_NAME,
+        url: siteUrl,
+        description: SEO_HOME.description,
       },
       {
         "@type": "CollectionPage",

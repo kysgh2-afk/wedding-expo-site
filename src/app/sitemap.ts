@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { LEGAL_PAGES } from "@/lib/legal";
 import { ALL_REGION_PAGES, getSiteUrl } from "@/lib/regions";
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -17,6 +18,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: now,
       changeFrequency: "daily" as const,
       priority: page.path.includes("/metropolitan/") || page.path.includes("/local/") ? 0.9 : 0.95,
+    })),
+    ...LEGAL_PAGES.map((page) => ({
+      url: `${siteUrl}${page.path}`,
+      lastModified: now,
+      changeFrequency: "monthly" as const,
+      priority: 0.5,
     })),
   ];
 }

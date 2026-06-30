@@ -4,6 +4,7 @@ import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { JsonLd } from "@/components/JsonLd";
 import { RegionNav } from "@/components/RegionNav";
 import { RegionSeoLinks } from "@/components/RegionSeoLinks";
+import { SiteFooter } from "@/components/SiteFooter";
 import type { SerializedExpo } from "@/components/ExpoList";
 import { buildEventListJsonLd } from "@/lib/regions";
 
@@ -108,9 +109,7 @@ export function RegionPage({
         <RegionSeoLinks />
       </main>
 
-      <footer className="border-t border-rose-100 bg-white py-8 text-center text-sm text-slate-500">
-        © {new Date().getFullYear()} 웨딩박람회 일정 모음 · {config.label} · 매주 업데이트
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

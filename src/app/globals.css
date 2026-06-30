@@ -20,3 +20,38 @@ body {
 summary::-webkit-details-marker {
   display: none;
 }
+
+.prose-legal {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  color: #475569;
+  line-height: 1.75;
+}
+
+.prose-legal h2 {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.prose-legal p,
+.prose-legal li {
+  font-size: 0.9375rem;
+}
+
+.prose-legal ul {
+  margin-top: 0.75rem;
+  padding-left: 1.25rem;
+  list-style: disc;
+}
+
+.prose-legal ul li + li {
+  margin-top: 0.5rem;
+}
+
+.prose-legal a {
+  color: #be123c;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}

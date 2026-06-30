@@ -1,4 +1,6 @@
-const TIPS = [
+import { JsonLd } from "@/components/JsonLd";
+
+export const TIP_ITEMS = [
   {
     title: "오전 일찍 방문",
     body: "오전 10~11시 사이 방문 시 대기 시간이 짧고 상담사가 여유롭게 응대해 줍니다.",
@@ -17,7 +19,7 @@ const TIPS = [
   },
 ];
 
-const FAQ = [
+export const FAQ_ITEMS = [
   {
     question: "웨딩박람회 입장료가 있나요?",
     answer:
@@ -35,6 +37,25 @@ const FAQ = [
   },
 ];
 
+type FaqItem = { question: string; answer: string };
+
+export function HomeFaqJsonLd({ items }: { items: FaqItem[] }) {
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: items.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
+  };
+
+  return <JsonLd data={data} />;
+}
+
 export function InfoSections() {
   return (
     <div className="space-y-16">
@@ -44,7 +65,7 @@ export function InfoSections() {
           전국 박람회는 거주 지역과 양가 부모님 방문 가능 거리를 모두 고려해 선택하시면 효율적입니다.
         </p>
         <div className="mt-8 grid gap-4 md:grid-cols-2">
-          {TIPS.map((tip) => (
+          {TIP_ITEMS.map((tip) => (
             <div key={tip.title} className="rounded-2xl bg-rose-50/70 p-5">
               <h3 className="font-semibold text-rose-800">{tip.title}</h3>
               <p className="mt-2 text-sm leading-relaxed text-slate-600">{tip.body}</p>
@@ -56,7 +77,7 @@ export function InfoSections() {
       <section className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-rose-100">
         <h2 className="text-2xl font-bold text-slate-900">전국 웨딩박람회 FAQ</h2>
         <div className="mt-8 space-y-4">
-          {FAQ.map((item) => (
+          {FAQ_ITEMS.map((item) => (
             <details
               key={item.question}
               className="group rounded-2xl border border-rose-100 bg-rose-50/40 p-5"
