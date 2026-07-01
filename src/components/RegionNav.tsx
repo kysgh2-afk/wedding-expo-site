@@ -11,6 +11,7 @@ import {
   SEO_METROPOLITAN_INDEX,
   SEO_SEOUL,
 } from "@/lib/regions";
+import { SEO_COST_INDEX } from "@/lib/wedding-cost";
 
 type RegionNavProps = {
   activePath?: string;
@@ -26,7 +27,7 @@ function navClass(isActive: boolean) {
 
 export function RegionNav({ activePath = "/" }: RegionNavProps) {
   return (
-    <nav aria-label="지역별 웨딩박람회" className="space-y-4">
+    <nav aria-label="사이트 주요 메뉴" className="space-y-4">
       <div className="flex flex-wrap gap-2">
         <Link href="/" className={navClass(activePath === "/")}>
           전체
@@ -45,6 +46,12 @@ export function RegionNav({ activePath = "/" }: RegionNavProps) {
         </Link>
         <Link href={SEO_LOCAL_INDEX.path} className={navClass(activePath.startsWith("/local"))}>
           지방
+        </Link>
+        <Link
+          href={SEO_COST_INDEX.path}
+          className={navClass(activePath.startsWith("/cost"))}
+        >
+          결혼비용
         </Link>
       </div>
 

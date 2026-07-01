@@ -1,9 +1,10 @@
 import type { ReactNode } from "react";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { CostNav } from "@/components/cost/CostNav";
+import { RegionNav } from "@/components/RegionNav";
 import { JsonLd } from "@/components/JsonLd";
 import { SiteFooter } from "@/components/SiteFooter";
-import type { CostPageSeo } from "@/lib/wedding-cost";
+import { SEO_COST_INDEX, type CostPageSeo } from "@/lib/wedding-cost";
 import { getSiteUrl, SITE_NAME } from "@/lib/regions";
 
 type CostPageLayoutProps = {
@@ -52,7 +53,10 @@ export function CostPageLayout({ page, sourceNote, children }: CostPageLayoutPro
               <p className="mt-2 text-xs text-slate-400">출처: {sourceNote}</p>
             ) : null}
           </div>
-          <CostNav activePath={page.path} />
+          <RegionNav activePath={page.path} />
+          {page.path !== SEO_COST_INDEX.path ? (
+            <CostNav activePath={page.path} />
+          ) : null}
         </div>
       </header>
 
