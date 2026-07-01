@@ -14,6 +14,7 @@ export function serializeExpos<
     imageUrl: string | null;
     linkUrl: string | null;
     clickCount: number;
+    tags: string[];
   },
 >(expos: T[]): SerializedExpo[] {
   return expos.map((expo) => ({
@@ -28,5 +29,6 @@ export function serializeExpos<
     imageUrl: expo.imageUrl,
     linkUrl: expo.linkUrl,
     clickCount: expo.clickCount,
+    tags: expo.tags ?? [],
   }));
 }

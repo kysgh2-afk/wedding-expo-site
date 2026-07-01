@@ -10,6 +10,7 @@ import {
   getSubregionOptions,
 } from "@/lib/constants";
 import { formatInputDate } from "@/lib/date";
+import { formatTagsForInput } from "@/lib/tags";
 import { uploadImageFile } from "@/lib/upload-image";
 
 type ExpoFormData = {
@@ -24,6 +25,7 @@ type ExpoFormData = {
   status: string;
   imageUrl: string;
   linkUrl: string;
+  tags: string;
   sortOrder: number;
   isPublished: boolean;
 };
@@ -44,6 +46,7 @@ const emptyForm: ExpoFormData = {
   status: "open",
   imageUrl: "",
   linkUrl: "",
+  tags: "",
   sortOrder: 0,
   isPublished: true,
 };
@@ -256,6 +259,19 @@ export function ExpoForm({ initialData, mode }: ExpoFormProps) {
             onChange={(event) => updateField("sortOrder", Number(event.target.value))}
             className="w-full rounded-xl border border-rose-200 px-4 py-3 outline-none focus:ring-2 focus:ring-rose-200"
           />
+        </label>
+
+        <label className="space-y-2 md:col-span-2">
+          <span className="text-sm font-medium text-slate-700">특징 태그</span>
+          <input
+            value={form.tags}
+            onChange={(event) => updateField("tags", event.target.value)}
+            className="w-full rounded-xl border border-rose-200 px-4 py-3 outline-none focus:ring-2 focus:ring-rose-200"
+            placeholder="#대형 #무료초대권 #웨딩홀위주"
+          />
+          <p className="text-xs text-slate-500">
+            #으로 구분해 최대 8개까지 입력할 수 있습니다. 예: #사전신청필수 #주말행사
+          </p>
         </label>
 
         <label className="space-y-2 md:col-span-2">

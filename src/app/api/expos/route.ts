@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { isAdminAuthenticated } from "@/lib/auth";
 import { getRegionLabel } from "@/lib/constants";
+import { normalizeTagsInput } from "@/lib/tags";
 import { prisma } from "@/lib/prisma";
 
 function normalizeRegion(body: {
@@ -47,6 +48,7 @@ export async function POST(request: Request) {
       imageUrl: body.imageUrl || null,
       linkUrl: body.linkUrl || null,
       sortOrder: Number(body.sortOrder ?? 0),
+      tags: normalizeTagsInput(body.tags),
       isPublished: body.isPublished ?? true,
     },
   });

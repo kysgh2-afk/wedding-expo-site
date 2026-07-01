@@ -37,7 +37,8 @@ function getStatusLabel(status: string) {
 function buildExpoDescription(expo: Expo) {
   const dateText = formatKoreanDateRange(expo.startDate, expo.endDate);
   const statusLabel = getStatusLabel(expo.status);
-  return `${expo.regionLabel} · ${expo.location} · ${dateText} · ${statusLabel}`;
+  const tagText = expo.tags.length > 0 ? ` · ${expo.tags.map((tag) => `#${tag}`).join(" ")}` : "";
+  return `${expo.regionLabel} · ${expo.location} · ${dateText} · ${statusLabel}${tagText}`;
 }
 
 function buildExpoItemLink(expo: Expo, siteUrl: string) {

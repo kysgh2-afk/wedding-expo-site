@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { isAdminAuthenticated } from "@/lib/auth";
 import { getRegionLabel } from "@/lib/constants";
+import { normalizeTagsInput } from "@/lib/tags";
 import { prisma } from "@/lib/prisma";
 
 type RouteContext = {
@@ -45,6 +46,7 @@ export async function PATCH(request: Request, context: RouteContext) {
       imageUrl: body.imageUrl,
       linkUrl: body.linkUrl,
       sortOrder: body.sortOrder !== undefined ? Number(body.sortOrder) : undefined,
+      tags: body.tags !== undefined ? normalizeTagsInput(body.tags) : undefined,
       isPublished: body.isPublished,
     },
   });

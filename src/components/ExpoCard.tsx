@@ -16,6 +16,7 @@ export type ExpoCardData = {
   status: string;
   imageUrl: string | null;
   linkUrl: string | null;
+  tags: string[];
 };
 
 function getStatusLabel(status: string) {
@@ -77,6 +78,18 @@ export function ExpoCard({ expo }: { expo: ExpoCardData }) {
         <h3 className="text-lg font-bold leading-snug text-slate-900 group-hover:text-rose-700">
           {expo.title}
         </h3>
+        {expo.tags.length > 0 ? (
+          <div className="flex flex-wrap gap-1.5">
+            {expo.tags.map((tag) => (
+              <span
+                key={tag}
+                className="rounded-full bg-rose-50 px-2.5 py-0.5 text-xs font-medium text-rose-700"
+              >
+                #{tag}
+              </span>
+            ))}
+          </div>
+        ) : null}
         <p className="mt-auto text-sm leading-relaxed text-slate-500">
           {expo.location}
         </p>

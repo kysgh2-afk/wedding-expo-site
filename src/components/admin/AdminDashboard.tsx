@@ -16,6 +16,7 @@ type AdminExpo = {
   status: string;
   imageUrl: string | null;
   linkUrl: string | null;
+  tags?: string[];
   isPublished: boolean;
   clickCount: number;
 };
@@ -109,6 +110,11 @@ export function AdminDashboard({ expos }: { expos: AdminExpo[] }) {
                       <p className="text-xs text-slate-500">
                         {expo.regionLabel} · {expo.location}
                       </p>
+                      {expo.tags && expo.tags.length > 0 ? (
+                        <p className="mt-1 text-xs text-rose-600">
+                          {expo.tags.map((tag) => `#${tag}`).join(" ")}
+                        </p>
+                      ) : null}
                     </td>
                     <td className="px-4 py-3 text-slate-600">
                       {formatKoreanDateRange(new Date(expo.startDate), new Date(expo.endDate))}

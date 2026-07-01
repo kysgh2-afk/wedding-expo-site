@@ -3,6 +3,7 @@ import { isAdminAuthenticated } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { ExpoForm } from "@/components/admin/ExpoForm";
 import { formatInputDate } from "@/lib/date";
+import { formatTagsForInput } from "@/lib/tags";
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -37,6 +38,7 @@ export default async function EditExpoPage({ params }: PageProps) {
             status: expo.status,
             imageUrl: expo.imageUrl ?? "",
             linkUrl: expo.linkUrl ?? "",
+            tags: formatTagsForInput(expo.tags ?? []),
             sortOrder: expo.sortOrder,
             isPublished: expo.isPublished,
           }}
