@@ -3,7 +3,14 @@ import { notFound } from "next/navigation";
 import { RegionPage } from "@/components/RegionPage";
 import { getPublishedExpos } from "@/lib/expos";
 import { filterGyeonggiExposByArea } from "@/lib/gyeonggi-area-filter";
-import { GYEONGGI_AREAS, GYEONGGI_AREA_SEO, type GyeonggiArea, SEO_GYEONGGI, buildPageMetadata } from "@/lib/regions";
+import {
+  GYEONGGI_AREAS,
+  GYEONGGI_AREA_SEO,
+  type GyeonggiArea,
+  SEO_GYEONGGI,
+  buildPageMetadata,
+  getGyeonggiAreaSubLinks,
+} from "@/lib/regions";
 import { serializeExpos } from "@/lib/serialize-expos";
 
 export const dynamic = "force-dynamic";
@@ -43,6 +50,8 @@ export default async function GyeonggiAreaPage({ params }: PageProps) {
         { label: "경기", href: SEO_GYEONGGI.path },
         { label: `${config.label} 웨딩박람회` },
       ]}
+      showSubNav
+      subLinks={getGyeonggiAreaSubLinks()}
     />
   );
 }

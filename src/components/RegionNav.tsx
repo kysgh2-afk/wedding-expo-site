@@ -36,7 +36,10 @@ export function RegionNav({ activePath = "/" }: RegionNavProps) {
         <Link href={SEO_SEOUL.path} className={navClass(activePath === SEO_SEOUL.path)}>
           서울
         </Link>
-        <Link href={SEO_GYEONGGI.path} className={navClass(activePath === SEO_GYEONGGI.path)}>
+        <Link
+          href={SEO_GYEONGGI.path}
+          className={navClass(activePath.startsWith(SEO_GYEONGGI.path))}
+        >
           경기
         </Link>
         <Link
@@ -77,7 +80,11 @@ export function RegionNav({ activePath = "/" }: RegionNavProps) {
           {LOCAL_SUBREGIONS.map((area) => {
             const path = LOCAL_SEO[area.value].path;
             return (
-              <Link key={area.value} href={path} className={navClass(activePath === path)}>
+              <Link
+                key={area.value}
+                href={path}
+                className={navClass(activePath === path || activePath.startsWith(`${path}/`))}
+              >
                 {area.label}
               </Link>
             );

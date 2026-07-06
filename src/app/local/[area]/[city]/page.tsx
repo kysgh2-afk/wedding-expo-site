@@ -9,6 +9,7 @@ import {
   LOCAL_SEO,
   SEO_LOCAL_INDEX,
   getLocalCityConfig,
+  getLocalCitySubLinks,
   buildPageMetadata,
 } from "@/lib/regions";
 import { serializeExpos } from "@/lib/serialize-expos";
@@ -54,6 +55,8 @@ export default async function LocalCityPage({ params }: PageProps) {
         { label: parentConfig.label, href: parentConfig.path },
         { label: `${config.label} 웨딩박람회` },
       ]}
+      showSubNav
+      subLinks={getLocalCitySubLinks(area as LocalSubregion)}
     />
   );
 }

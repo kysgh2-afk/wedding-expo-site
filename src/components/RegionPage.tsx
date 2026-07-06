@@ -74,15 +74,22 @@ export function RegionPage({
           <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-rose-100">
             <h2 className="text-lg font-bold text-slate-900">세부 지역 선택</h2>
             <div className="mt-4 flex flex-wrap gap-2">
-              {subLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="rounded-full bg-rose-50 px-4 py-2 text-sm font-semibold text-rose-700 hover:bg-rose-100"
-                >
-                  {link.label} 웨딩박람회
-                </Link>
-              ))}
+              {subLinks.map((link) => {
+                const isActive = link.href === config.path;
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
+                      isActive
+                        ? "bg-rose-600 text-white shadow"
+                        : "bg-rose-50 text-rose-700 hover:bg-rose-100"
+                    }`}
+                  >
+                    {link.label} 웨딩박람회
+                  </Link>
+                );
+              })}
             </div>
           </section>
         ) : null}

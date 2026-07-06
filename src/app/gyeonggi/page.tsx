@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { RegionPage } from "@/components/RegionPage";
 import { getPublishedExpos } from "@/lib/expos";
-import { GYEONGGI_AREAS, GYEONGGI_AREA_SEO, SEO_GYEONGGI, buildPageMetadata } from "@/lib/regions";
+import { SEO_GYEONGGI, buildPageMetadata, getGyeonggiAreaSubLinks } from "@/lib/regions";
 import { serializeExpos } from "@/lib/serialize-expos";
 
 export const dynamic = "force-dynamic";
@@ -20,10 +20,7 @@ export default async function GyeonggiPage() {
         { label: "경기 웨딩박람회" },
       ]}
       showSubNav
-      subLinks={GYEONGGI_AREAS.map((area) => ({
-        href: GYEONGGI_AREA_SEO[area.value].path,
-        label: area.label,
-      }))}
+      subLinks={getGyeonggiAreaSubLinks()}
     />
   );
 }

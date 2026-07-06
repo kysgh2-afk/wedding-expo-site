@@ -161,6 +161,13 @@ export const GYEONGGI_AREA_SEO: Record<GyeonggiArea, RegionPageBase> = {
   },
 };
 
+export function getGyeonggiAreaSubLinks() {
+  return GYEONGGI_AREAS.map((area) => ({
+    href: GYEONGGI_AREA_SEO[area.value].path,
+    label: area.label,
+  }));
+}
+
 export const SEO_METROPOLITAN_INDEX: RegionPageBase = {
   path: "/metropolitan",
   label: "광역시",
