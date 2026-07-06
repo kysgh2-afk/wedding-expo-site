@@ -75,6 +75,92 @@ export const SEO_GYEONGGI: RegionPageBase = {
   filter: { regionGroup: "gyeonggi" },
 };
 
+export const GYEONGGI_AREAS = [
+  { value: "suwon", label: "수원" },
+  { value: "pyeongtaek", label: "평택" },
+  { value: "uijeongbu", label: "의정부" },
+  { value: "ilsan", label: "일산" },
+  { value: "hanam", label: "하남" },
+  { value: "gwangmyeong", label: "광명" },
+] as const;
+
+export type GyeonggiArea = (typeof GYEONGGI_AREAS)[number]["value"];
+
+export const GYEONGGI_AREA_SEO: Record<GyeonggiArea, RegionPageBase> = {
+  suwon: {
+    path: "/gyeonggi/suwon",
+    label: "수원",
+    h1: "수원 웨딩박람회 일정",
+    title: "수원 웨딩박람회 일정 2026 | 수원메쎄·광교·무료초대권",
+    description:
+      "수원 웨딩박람회·웨딩페어 최신 일정을 확인하세요. 수원메쎄, 광교, 영통 등 수원 지역 웨딩박람회 무료초대권 정보를 제공합니다.",
+    keywords: ["수원 웨딩박람회", "수원 웨딩페어", "수원메쎄 웨딩박람회", "광교 웨딩박람회"],
+    intro:
+      "수원에서 열리는 웨딩박람회 일정입니다. 수원메쎄, 광교, 영통 등 주요 권역의 박람회 정보를 확인하세요.",
+    filter: { regionGroup: "gyeonggi" },
+  },
+  pyeongtaek: {
+    path: "/gyeonggi/pyeongtaek",
+    label: "평택",
+    h1: "평택 웨딩박람회 일정",
+    title: "평택 웨딩박람회 일정 2026 | 평택·송탄·고덕·무료초대권",
+    description:
+      "평택 웨딩박람회·웨딩페어 일정을 확인하세요. 평택, 송탄, 고덕 등 경기 남부 박람회 무료초대권 정보를 제공합니다.",
+    keywords: ["평택 웨딩박람회", "평택 웨딩페어", "송탄 웨딩박람회", "고덕 웨딩박람회"],
+    intro:
+      "평택에서 열리는 웨딩박람회 일정입니다. 평택, 송탄, 고덕 지역 박람회 정보를 한눈에 확인할 수 있습니다.",
+    filter: { regionGroup: "gyeonggi" },
+  },
+  uijeongbu: {
+    path: "/gyeonggi/uijeongbu",
+    label: "의정부",
+    h1: "의정부 웨딩박람회 일정",
+    title: "의정부 웨딩박람회 일정 2026 | 의정부·경기북부·무료초대권",
+    description:
+      "의정부 웨딩박람회·웨딩페어 최신 일정을 확인하세요. 의정부 중심 경기북부 박람회 무료초대권 정보를 제공합니다.",
+    keywords: ["의정부 웨딩박람회", "의정부 웨딩페어", "경기북부 웨딩박람회"],
+    intro:
+      "의정부에서 열리는 웨딩박람회 일정입니다. 경기북부 예비부부를 위한 박람회 정보를 모았습니다.",
+    filter: { regionGroup: "gyeonggi" },
+  },
+  ilsan: {
+    path: "/gyeonggi/ilsan",
+    label: "일산",
+    h1: "일산 웨딩박람회 일정",
+    title: "일산 웨딩박람회 일정 2026 | 킨텍스·고양·무료초대권",
+    description:
+      "일산 웨딩박람회·웨딩페어 최신 일정을 확인하세요. 킨텍스, 고양, 대화 등 일산권 웨딩박람회 무료초대권 정보를 제공합니다.",
+    keywords: ["일산 웨딩박람회", "킨텍스 웨딩박람회", "고양 웨딩박람회", "일산 웨딩페어"],
+    intro:
+      "일산에서 열리는 웨딩박람회 일정입니다. 킨텍스, 고양, 대화역 인근 박람회 정보를 확인하세요.",
+    filter: { regionGroup: "gyeonggi" },
+  },
+  hanam: {
+    path: "/gyeonggi/hanam",
+    label: "하남",
+    h1: "하남 웨딩박람회 일정",
+    title: "하남 웨딩박람회 일정 2026 | 미사·하남·무료초대권",
+    description:
+      "하남 웨딩박람회·웨딩페어 일정 정보를 확인하세요. 하남, 미사, 감일 등 하남권 박람회 무료초대권 정보를 제공합니다.",
+    keywords: ["하남 웨딩박람회", "미사 웨딩박람회", "하남 웨딩페어", "감일 웨딩박람회"],
+    intro:
+      "하남에서 열리는 웨딩박람회 일정입니다. 하남·미사 생활권 예비부부를 위한 박람회 정보를 확인하세요.",
+    filter: { regionGroup: "gyeonggi" },
+  },
+  gwangmyeong: {
+    path: "/gyeonggi/gwangmyeong",
+    label: "광명",
+    h1: "광명 웨딩박람회 일정",
+    title: "광명 웨딩박람회 일정 2026 | 광명역·철산·무료초대권",
+    description:
+      "광명 웨딩박람회·웨딩페어 일정 정보를 확인하세요. 광명역, 철산 등 광명권 웨딩박람회 무료초대권 정보를 제공합니다.",
+    keywords: ["광명 웨딩박람회", "광명역 웨딩박람회", "철산 웨딩박람회", "광명 웨딩페어"],
+    intro:
+      "광명에서 열리는 웨딩박람회 일정입니다. 광명역, 철산 등 광명권 박람회 정보를 확인하세요.",
+    filter: { regionGroup: "gyeonggi" },
+  },
+};
+
 export const SEO_METROPOLITAN_INDEX: RegionPageBase = {
   path: "/metropolitan",
   label: "광역시",
@@ -230,13 +316,168 @@ export const LOCAL_SEO: Record<LocalSubregion, RegionPageBase> = {
   },
 };
 
+export const LOCAL_CITY_AREAS: Partial<
+  Record<LocalSubregion, readonly { value: string; label: string }[]>
+> = {
+  chungcheong: [
+    { value: "cheonan", label: "천안" },
+    { value: "cheongju", label: "청주" },
+  ],
+  jeolla: [
+    { value: "gwangju", label: "광주" },
+    { value: "jeonju", label: "전주" },
+  ],
+  gangwon: [
+    { value: "gangneung", label: "강릉" },
+    { value: "chuncheon", label: "춘천" },
+  ],
+  gyeongsang: [
+    { value: "changwon", label: "창원" },
+    { value: "jinju", label: "진주" },
+    { value: "pohang", label: "포항" },
+  ],
+};
+
+export const LOCAL_CITY_SEO: Partial<
+  Record<LocalSubregion, Record<string, RegionPageBase>>
+> = {
+  chungcheong: {
+    cheonan: {
+      path: "/local/chungcheong/cheonan",
+      label: "천안",
+      h1: "천안 웨딩박람회 일정",
+      title: "천안 웨딩박람회 일정 2026 | 천안·아산·무료초대권",
+      description:
+        "천안 웨딩박람회·웨딩페어 최신 일정을 확인하세요. 천안, 아산 등 충남 박람회 무료초대권 정보를 제공합니다.",
+      keywords: ["천안 웨딩박람회", "천안 웨딩페어", "아산 웨딩박람회", "충남 웨딩박람회"],
+      intro: "천안에서 열리는 웨딩박람회 일정입니다. 천안, 아산 지역 박람회 정보를 확인하세요.",
+      filter: { regionGroup: "local", regionSub: "chungcheong" },
+    },
+    cheongju: {
+      path: "/local/chungcheong/cheongju",
+      label: "청주",
+      h1: "청주 웨딩박람회 일정",
+      title: "청주 웨딩박람회 일정 2026 | 청주·오창·무료초대권",
+      description:
+        "청주 웨딩박람회·웨딩페어 최신 일정을 확인하세요. 청주, 오창 등 충북 박람회 무료초대권 정보를 제공합니다.",
+      keywords: ["청주 웨딩박람회", "청주 웨딩페어", "오창 웨딩박람회", "충북 웨딩박람회"],
+      intro: "청주에서 열리는 웨딩박람회 일정입니다. 청주, 오창 지역 박람회 정보를 확인하세요.",
+      filter: { regionGroup: "local", regionSub: "chungcheong" },
+    },
+  },
+  jeolla: {
+    gwangju: {
+      path: "/local/jeolla/gwangju",
+      label: "광주",
+      h1: "광주 웨딩박람회 일정",
+      title: "광주 웨딩박람회 일정 2026 | 전라권·무료초대권",
+      description:
+        "광주 웨딩박람회·웨딩페어 일정을 확인하세요. 전라권 광주 지역 박람회 무료초대권 정보를 제공합니다.",
+      keywords: ["광주 웨딩박람회", "광주 웨딩페어", "전라 웨딩박람회", "광산 웨딩박람회"],
+      intro: "광주에서 열리는 웨딩박람회 일정입니다. 전라권 광주 지역 박람회 정보를 확인하세요.",
+      filter: { regionGroup: "local", regionSub: "jeolla" },
+    },
+    jeonju: {
+      path: "/local/jeolla/jeonju",
+      label: "전주",
+      h1: "전주 웨딩박람회 일정",
+      title: "전주 웨딩박람회 일정 2026 | 전북·무료초대권",
+      description:
+        "전주 웨딩박람회·웨딩페어 최신 일정을 확인하세요. 전주, 완산, 덕진 등 전북 박람회 무료초대권 정보를 제공합니다.",
+      keywords: ["전주 웨딩박람회", "전주 웨딩페어", "전북 웨딩박람회"],
+      intro: "전주에서 열리는 웨딩박람회 일정입니다. 전북 지역 박람회 정보를 확인하세요.",
+      filter: { regionGroup: "local", regionSub: "jeolla" },
+    },
+  },
+  gangwon: {
+    gangneung: {
+      path: "/local/gangwon/gangneung",
+      label: "강릉",
+      h1: "강릉 웨딩박람회 일정",
+      title: "강릉 웨딩박람회 일정 2026 | 동해안·무료초대권",
+      description:
+        "강릉 웨딩박람회·웨딩페어 일정을 확인하세요. 강릉, 경포 등 동해안 박람회 무료초대권 정보를 제공합니다.",
+      keywords: ["강릉 웨딩박람회", "강릉 웨딩페어", "동해안 웨딩박람회"],
+      intro: "강릉에서 열리는 웨딩박람회 일정입니다. 동해안 지역 박람회 정보를 확인하세요.",
+      filter: { regionGroup: "local", regionSub: "gangwon" },
+    },
+    chuncheon: {
+      path: "/local/gangwon/chuncheon",
+      label: "춘천",
+      h1: "춘천 웨딩박람회 일정",
+      title: "춘천 웨딩박람회 일정 2026 | 강원·무료초대권",
+      description:
+        "춘천 웨딩박람회·웨딩페어 일정을 확인하세요. 춘천, 소양 등 강원 서부 박람회 무료초대권 정보를 제공합니다.",
+      keywords: ["춘천 웨딩박람회", "춘천 웨딩페어", "강원 웨딩박람회"],
+      intro: "춘천에서 열리는 웨딩박람회 일정입니다. 강원 서부 지역 박람회 정보를 확인하세요.",
+      filter: { regionGroup: "local", regionSub: "gangwon" },
+    },
+  },
+  gyeongsang: {
+    changwon: {
+      path: "/local/gyeongsang/changwon",
+      label: "창원",
+      h1: "창원 웨딩박람회 일정",
+      title: "창원 웨딩박람회 일정 2026 | 마산·진해·무료초대권",
+      description:
+        "창원 웨딩박람회·웨딩페어 일정을 확인하세요. 창원, 마산, 진해 등 경남 박람회 무료초대권 정보를 제공합니다.",
+      keywords: ["창원 웨딩박람회", "창원 웨딩페어", "마산 웨딩박람회", "진해 웨딩박람회"],
+      intro: "창원에서 열리는 웨딩박람회 일정입니다. 창원, 마산, 진해 지역 박람회 정보를 확인하세요.",
+      filter: { regionGroup: "local", regionSub: "gyeongsang" },
+    },
+    jinju: {
+      path: "/local/gyeongsang/jinju",
+      label: "진주",
+      h1: "진주 웨딩박람회 일정",
+      title: "진주 웨딩박람회 일정 2026 | 경남·무료초대권",
+      description:
+        "진주 웨딩박람회·웨딩페어 일정을 확인하세요. 진주 지역 경남 박람회 무료초대권 정보를 제공합니다.",
+      keywords: ["진주 웨딩박람회", "진주 웨딩페어", "경남 웨딩박람회"],
+      intro: "진주에서 열리는 웨딩박람회 일정입니다. 경남 남부 지역 박람회 정보를 확인하세요.",
+      filter: { regionGroup: "local", regionSub: "gyeongsang" },
+    },
+    pohang: {
+      path: "/local/gyeongsang/pohang",
+      label: "포항",
+      h1: "포항 웨딩박람회 일정",
+      title: "포항 웨딩박람회 일정 2026 | 경북·무료초대권",
+      description:
+        "포항 웨딩박람회·웨딩페어 일정을 확인하세요. 포항 지역 경북 박람회 무료초대권 정보를 제공합니다.",
+      keywords: ["포항 웨딩박람회", "포항 웨딩페어", "경북 웨딩박람회"],
+      intro: "포항에서 열리는 웨딩박람회 일정입니다. 경북 동해안 지역 박람회 정보를 확인하세요.",
+      filter: { regionGroup: "local", regionSub: "gyeongsang" },
+    },
+  },
+};
+
+export function getLocalCityConfig(region: string, city: string) {
+  return LOCAL_CITY_SEO[region as LocalSubregion]?.[city];
+}
+
+export function getLocalCitySubLinks(region: LocalSubregion) {
+  const areas = LOCAL_CITY_AREAS[region];
+  const seo = LOCAL_CITY_SEO[region];
+  if (!areas || !seo) return [];
+
+  return areas.map((area) => ({
+    href: seo[area.value].path,
+    label: area.label,
+  }));
+}
+
+export const ALL_LOCAL_CITY_PAGES = Object.values(LOCAL_CITY_SEO).flatMap((cities) =>
+  Object.values(cities),
+);
+
 export const ALL_REGION_PAGES = [
   SEO_SEOUL,
   SEO_GYEONGGI,
+  ...Object.values(GYEONGGI_AREA_SEO),
   SEO_METROPOLITAN_INDEX,
   ...Object.values(METROPOLITAN_SEO),
   SEO_LOCAL_INDEX,
   ...Object.values(LOCAL_SEO),
+  ...ALL_LOCAL_CITY_PAGES,
 ];
 
 export function buildPageMetadata(page: {

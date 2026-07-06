@@ -19,7 +19,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${siteUrl}${page.path}`,
       lastModified: now,
       changeFrequency: "daily" as const,
-      priority: page.path.includes("/metropolitan/") || page.path.includes("/local/") ? 0.9 : 0.95,
+      priority:
+        page.path.includes("/metropolitan/") ||
+        page.path.includes("/gyeonggi/") ||
+        page.path.match(/\/local\/[^/]+\/[^/]+/)
+          ? 0.9
+          : 0.95,
     })),
     ...LEGAL_PAGES.map((page) => ({
       url: `${siteUrl}${page.path}`,
