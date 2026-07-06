@@ -25,42 +25,83 @@ function getStatusLabel(status: string) {
 
 const EXPO_IMAGE_SIZE = 320;
 
+function getRankBadgeClass(rank: number) {
+  if (rank === 1) return "bg-amber-400 text-white shadow-md shadow-amber-200";
+  if (rank === 2) return "bg-slate-400 text-white shadow-md shadow-slate-200";
+  if (rank === 3) return "bg-orange-400 text-white shadow-md shadow-orange-200";
+  return "bg-rose-500 text-white";
+}
+
 function trackClick(expoId: string) {
   void fetch(`/api/expos/${expoId}/click`, { method: "POST", keepalive: true });
 }
 
-export function ExpoCard({ expo }: { expo: ExpoCardData }) {
+export function ExpoCard({ expo, rank }: { expo: ExpoCardData; rank?: number }) {
   const dateText = formatKoreanDateRange(expo.startDate, expo.endDate);
   const statusLabel = getStatusLabel(expo.status);
   const isOpen = expo.status === "open";
+  const isRanked = rank !== undefined;
+
+  const imageSection = isRanked ? (
+    <div className="relative aspect-square w-full overflow-hidden bg-rose-50">
+      {expo.imageUrl ? (
+        <Image
+          src={expo.imageUrl}
+          alt={expo.title}
+          fill
+          className="object-cover transition duration-300 group-hover:scale-105"
+          sizes="(max-width: 768px) 100vw, 50vw"
+        />
+      ) : (
+        <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-rose-100 to-amber-50 text-sm text-rose-400">
+          웨딩박람회
+        </div>
+      )}
+      <span className="absolute left-3 top-3 rounded-full bg-white/95 px-3 py-1 text-xs font-semibold text-rose-600 shadow">
+        {expo.regionLabel}
+      </span>
+      <span
+        className={`absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full text-lg font-bold ${getRankBadgeClass(rank)}`}
+        aria-label={`${rank}위`}
+      >
+        {rank}
+      </span>
+    </div>
+  ) : (
+    <div
+      className="relative mx-auto overflow-hidden bg-rose-50"
+      style={{ width: EXPO_IMAGE_SIZE, height: EXPO_IMAGE_SIZE, maxWidth: "100%" }}
+    >
+      {expo.imageUrl ? (
+        <Image
+          src={expo.imageUrl}
+          alt={expo.title}
+          width={EXPO_IMAGE_SIZE}
+          height={EXPO_IMAGE_SIZE}
+          className="h-[320px] w-[320px] max-w-full object-cover transition duration-300 group-hover:scale-105"
+          sizes={`${EXPO_IMAGE_SIZE}px`}
+        />
+      ) : (
+        <div
+          className="flex items-center justify-center bg-gradient-to-br from-rose-100 to-amber-50 text-sm text-rose-400"
+          style={{ width: EXPO_IMAGE_SIZE, height: EXPO_IMAGE_SIZE, maxWidth: "100%" }}
+        >
+          웨딩박람회
+        </div>
+      )}
+      <span className="absolute left-3 top-3 rounded-full bg-white/95 px-3 py-1 text-xs font-semibold text-rose-600 shadow">
+        {expo.regionLabel}
+      </span>
+    </div>
+  );
 
   const content = (
-    <article className="group mx-auto flex h-full w-full max-w-[320px] flex-col overflow-hidden rounded-2xl border border-rose-100 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
-      <div
-        className="relative mx-auto overflow-hidden bg-rose-50"
-        style={{ width: EXPO_IMAGE_SIZE, height: EXPO_IMAGE_SIZE, maxWidth: "100%" }}
-      >
-        {expo.imageUrl ? (
-          <Image
-            src={expo.imageUrl}
-            alt={expo.title}
-            width={EXPO_IMAGE_SIZE}
-            height={EXPO_IMAGE_SIZE}
-            className="h-[320px] w-[320px] max-w-full object-cover transition duration-300 group-hover:scale-105"
-            sizes={`${EXPO_IMAGE_SIZE}px`}
-          />
-        ) : (
-          <div
-            className="flex items-center justify-center bg-gradient-to-br from-rose-100 to-amber-50 text-sm text-rose-400"
-            style={{ width: EXPO_IMAGE_SIZE, height: EXPO_IMAGE_SIZE, maxWidth: "100%" }}
-          >
-            웨딩박람회
-          </div>
-        )}
-        <span className="absolute left-3 top-3 rounded-full bg-white/95 px-3 py-1 text-xs font-semibold text-rose-600 shadow">
-          {expo.regionLabel}
-        </span>
-      </div>
+    <article
+      className={`group flex h-full w-full flex-col overflow-hidden rounded-2xl border border-rose-100 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg ${
+        isRanked ? "" : "mx-auto max-w-[320px]"
+      }`}
+    >
+      {imageSection}
 
       <div className="flex flex-1 flex-col gap-3 p-5">
         <div className="flex items-center justify-between gap-2">
