@@ -40,3 +40,15 @@ export async function getRecentExposForRss(limit = 30) {
     return [];
   }
 }
+
+export async function getPopularExpos(limit = 10) {
+  try {
+    return await prisma.expo.findMany({
+      where: { isPublished: true },
+      orderBy: [{ clickCount: "desc" }, { sortOrder: "asc" }, { startDate: "asc" }],
+      take: limit,
+    });
+  } catch {
+    return [];
+  }
+}

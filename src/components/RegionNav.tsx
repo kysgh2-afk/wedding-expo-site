@@ -12,6 +12,7 @@ import {
   SEO_SEOUL,
 } from "@/lib/regions";
 import { SEO_COST_INDEX } from "@/lib/wedding-cost";
+import { SEO_POPULAR } from "@/lib/popular";
 
 type RegionNavProps = {
   activePath?: string;
@@ -46,6 +47,9 @@ export function RegionNav({ activePath = "/" }: RegionNavProps) {
         </Link>
         <Link href={SEO_LOCAL_INDEX.path} className={navClass(activePath.startsWith("/local"))}>
           지방
+        </Link>
+        <Link href={SEO_POPULAR.path} className={navClass(activePath === SEO_POPULAR.path)}>
+          인기 순위
         </Link>
         <Link
           href={SEO_COST_INDEX.path}
