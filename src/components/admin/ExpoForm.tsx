@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { ExpoImage } from "@/components/ExpoImage";
 import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
@@ -302,7 +302,7 @@ export function ExpoForm({ initialData, mode }: ExpoFormProps) {
             </label>
             {form.imageUrl ? (
               <div className="relative h-24 w-36 overflow-hidden rounded-xl border border-rose-100">
-                <Image src={form.imageUrl} alt="미리보기" fill className="object-cover" />
+                <ExpoImage src={form.imageUrl} alt="미리보기" fill className="object-cover" />
               </div>
             ) : null}
           </div>

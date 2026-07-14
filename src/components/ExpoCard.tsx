@@ -1,7 +1,7 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
+import { ExpoImage } from "@/components/ExpoImage";
 import { formatKoreanDateRange } from "@/lib/date";
 import { STATUS_OPTIONS } from "@/lib/constants";
 
@@ -45,7 +45,7 @@ export function ExpoCard({ expo, rank }: { expo: ExpoCardData; rank?: number }) 
   const imageSection = isRanked ? (
     <div className="relative aspect-square w-full overflow-hidden bg-rose-50">
       {expo.imageUrl ? (
-        <Image
+        <ExpoImage
           src={expo.imageUrl}
           alt={expo.title}
           fill
@@ -73,7 +73,7 @@ export function ExpoCard({ expo, rank }: { expo: ExpoCardData; rank?: number }) 
       style={{ width: EXPO_IMAGE_SIZE, height: EXPO_IMAGE_SIZE, maxWidth: "100%" }}
     >
       {expo.imageUrl ? (
-        <Image
+        <ExpoImage
           src={expo.imageUrl}
           alt={expo.title}
           width={EXPO_IMAGE_SIZE}

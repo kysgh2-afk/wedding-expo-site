@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { ExpoImage } from "@/components/ExpoImage";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { formatKoreanDateRange } from "@/lib/date";
@@ -96,7 +96,7 @@ export function AdminDashboard({ expos }: { expos: AdminExpo[] }) {
                     <td className="px-4 py-3">
                       <div className="relative h-14 w-20 overflow-hidden rounded-lg bg-rose-50">
                         {expo.imageUrl ? (
-                          <Image
+                          <ExpoImage
                             src={expo.imageUrl}
                             alt={expo.title}
                             fill
