@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { ExpoImage } from "@/components/ExpoImage";
-import { formatKoreanDateRange } from "@/lib/date";
+import { formatExpoSchedule } from "@/lib/date";
 import { STATUS_OPTIONS } from "@/lib/constants";
 
 export type ExpoCardData = {
@@ -17,6 +17,7 @@ export type ExpoCardData = {
   imageUrl: string | null;
   linkUrl: string | null;
   tags: string[];
+  isWeeklyWeekend?: boolean;
 };
 
 function getStatusLabel(status: string) {
@@ -37,7 +38,11 @@ function trackClick(expoId: string) {
 }
 
 export function ExpoCard({ expo, rank }: { expo: ExpoCardData; rank?: number }) {
-  const dateText = formatKoreanDateRange(expo.startDate, expo.endDate);
+  const dateText = formatExpoSchedule(
+    expo.startDate,
+    expo.endDate,
+    expo.isWeeklyWeekend,
+  );
   const statusLabel = getStatusLabel(expo.status);
   const isOpen = expo.status === "open";
   const isRanked = rank !== undefined;

@@ -53,6 +53,7 @@ export async function POST(request: Request) {
       linkUrl: body.linkUrl || null,
       sortOrder: Number(body.sortOrder ?? 0),
       tags: normalizeTagsInput(body.tags),
+      isWeeklyWeekend: Boolean(body.isWeeklyWeekend),
       isPublished: body.isPublished ?? true,
     },
   });

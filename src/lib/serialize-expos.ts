@@ -15,6 +15,7 @@ export function serializeExpos<
     linkUrl: string | null;
     clickCount: number;
     tags: string[];
+    isWeeklyWeekend?: boolean;
   },
 >(expos: T[]): SerializedExpo[] {
   return expos.map((expo) => ({
@@ -30,5 +31,6 @@ export function serializeExpos<
     linkUrl: expo.linkUrl,
     clickCount: expo.clickCount,
     tags: expo.tags ?? [],
+    isWeeklyWeekend: expo.isWeeklyWeekend ?? false,
   }));
 }

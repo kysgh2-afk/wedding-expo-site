@@ -1,5 +1,5 @@
 import type { Expo } from "@prisma/client";
-import { formatKoreanDateRange } from "@/lib/date";
+import { formatExpoSchedule } from "@/lib/date";
 import { STATUS_OPTIONS } from "@/lib/constants";
 import { SEO_HOME, getSiteUrl, SITE_NAME } from "@/lib/regions";
 
@@ -35,7 +35,11 @@ function getStatusLabel(status: string) {
 }
 
 function buildExpoDescription(expo: Expo) {
-  const dateText = formatKoreanDateRange(expo.startDate, expo.endDate);
+  const dateText = formatExpoSchedule(
+    expo.startDate,
+    expo.endDate,
+    expo.isWeeklyWeekend,
+  );
   const statusLabel = getStatusLabel(expo.status);
   const tagText = expo.tags.length > 0 ? ` · ${expo.tags.map((tag) => `#${tag}`).join(" ")}` : "";
   return `${expo.regionLabel} · ${expo.location} · ${dateText} · ${statusLabel}${tagText}`;

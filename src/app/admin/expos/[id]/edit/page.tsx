@@ -40,6 +40,7 @@ export default async function EditExpoPage({ params }: PageProps) {
             linkUrl: expo.linkUrl ?? "",
             tags: formatTagsForInput(expo.tags ?? []),
             sortOrder: expo.sortOrder,
+            isWeeklyWeekend: expo.isWeeklyWeekend,
             isPublished: expo.isPublished,
           }}
         />

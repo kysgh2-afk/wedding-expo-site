@@ -27,6 +27,7 @@ type ExpoFormData = {
   linkUrl: string;
   tags: string;
   sortOrder: number;
+  isWeeklyWeekend: boolean;
   isPublished: boolean;
 };
 
@@ -48,6 +49,7 @@ const emptyForm: ExpoFormData = {
   linkUrl: "",
   tags: "",
   sortOrder: 0,
+  isWeeklyWeekend: false,
   isPublished: true,
 };
 
@@ -235,6 +237,28 @@ export function ExpoForm({ initialData, mode }: ExpoFormProps) {
             required
           />
         </label>
+
+        <div className="space-y-2 md:col-span-2">
+          <span className="text-sm font-medium text-slate-700">일정 표시</span>
+          <div className="flex flex-wrap items-center gap-3">
+            <button
+              type="button"
+              onClick={() => updateField("isWeeklyWeekend", !form.isWeeklyWeekend)}
+              className={`rounded-xl px-4 py-3 text-sm font-semibold transition ${
+                form.isWeeklyWeekend
+                  ? "bg-rose-600 text-white shadow"
+                  : "bg-white text-slate-700 ring-1 ring-rose-200 hover:bg-rose-50"
+              }`}
+            >
+              매주 토~일 개최
+            </button>
+            <p className="text-sm text-slate-500">
+              {form.isWeeklyWeekend
+                ? "사이트에 「매주 토~일 개최」로 표시됩니다. 시작·종료일은 노출 기간으로 사용됩니다."
+                : "기본은 시작일~종료일 범위로 표시됩니다."}
+            </p>
+          </div>
+        </div>
 
         <label className="space-y-2">
           <span className="text-sm font-medium text-slate-700">상태</span>

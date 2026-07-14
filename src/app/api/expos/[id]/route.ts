@@ -47,6 +47,8 @@ export async function PATCH(request: Request, context: RouteContext) {
       linkUrl: body.linkUrl,
       sortOrder: body.sortOrder !== undefined ? Number(body.sortOrder) : undefined,
       tags: body.tags !== undefined ? normalizeTagsInput(body.tags) : undefined,
+      isWeeklyWeekend:
+        body.isWeeklyWeekend !== undefined ? Boolean(body.isWeeklyWeekend) : undefined,
       isPublished: body.isPublished,
     },
   });

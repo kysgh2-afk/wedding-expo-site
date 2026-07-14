@@ -22,8 +22,9 @@ model Expo {
   linkUrl     String?
   sortOrder   Int      @default(0)
   clickCount  Int      @default(0)
-  tags        String[] @default([])
-  isPublished Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  tags             String[] @default([])
+  isWeeklyWeekend  Boolean  @default(false)
+  isPublished      Boolean  @default(true)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 }

@@ -3,7 +3,7 @@
 import { ExpoImage } from "@/components/ExpoImage";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { formatKoreanDateRange } from "@/lib/date";
+import { formatExpoSchedule } from "@/lib/date";
 import { STATUS_OPTIONS } from "@/lib/constants";
 
 type AdminExpo = {
@@ -17,6 +17,7 @@ type AdminExpo = {
   imageUrl: string | null;
   linkUrl: string | null;
   tags?: string[];
+  isWeeklyWeekend?: boolean;
   isPublished: boolean;
   clickCount: number;
 };
@@ -117,7 +118,11 @@ export function AdminDashboard({ expos }: { expos: AdminExpo[] }) {
                       ) : null}
                     </td>
                     <td className="px-4 py-3 text-slate-600">
-                      {formatKoreanDateRange(new Date(expo.startDate), new Date(expo.endDate))}
+                      {formatExpoSchedule(
+                        new Date(expo.startDate),
+                        new Date(expo.endDate),
+                        expo.isWeeklyWeekend,
+                      )}
                     </td>
                     <td className="px-4 py-3">
                       {STATUS_OPTIONS.find((item) => item.value === expo.status)?.label}
