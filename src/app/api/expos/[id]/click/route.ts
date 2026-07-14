@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { getActiveExpoDateFilter } from "@/lib/expos";
 import { prisma } from "@/lib/prisma";
 
 type RouteContext = {
@@ -8,8 +9,12 @@ type RouteContext = {
 export async function POST(_request: Request, context: RouteContext) {
   const { id } = await context.params;
 
-  const expo = await prisma.expo.findUnique({
-    where: { id, isPublished: true },
+  const expo = await prisma.expo.findFirst({
+    where: {
+      id,
+      isPublished: true,
+      ...getActiveExpoDateFilter(),
+    },
     select: { id: true },
   });
 

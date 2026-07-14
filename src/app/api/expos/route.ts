@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { isAdminAuthenticated } from "@/lib/auth";
 import { getRegionLabel } from "@/lib/constants";
 import { normalizeTagsInput } from "@/lib/tags";
+import { getActiveExpoDateFilter } from "@/lib/expos";
 import { prisma } from "@/lib/prisma";
 
 function normalizeRegion(body: {
@@ -20,7 +21,10 @@ function normalizeRegion(body: {
 
 export async function GET() {
   const expos = await prisma.expo.findMany({
-    where: { isPublished: true },
+    where: {
+      isPublished: true,
+      ...getActiveExpoDateFilter(),
+    },
     orderBy: [{ sortOrder: "asc" }, { startDate: "asc" }],
   });
 
