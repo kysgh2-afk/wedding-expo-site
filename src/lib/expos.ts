@@ -7,12 +7,15 @@ type ExpoFilter = {
 
 /** Inclusive end-of-day in Asia/Seoul: hide expos only after their end date has passed. */
 export function getActiveExpoDateFilter() {
-  const todayInSeoul = new Date().toLocaleDateString("en-CA", {
+  const todayInSeoul = new Intl.DateTimeFormat("en-CA", {
     timeZone: "Asia/Seoul",
-  });
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date());
 
   return {
-    endDate: { gte: new Date(todayInSeoul) },
+    endDate: { gte: new Date(`${todayInSeoul}T00:00:00+09:00`) },
   };
 }
 
@@ -25,11 +28,20 @@ function getPublishedActiveWhere(filter?: ExpoFilter) {
   };
 }
 
+function logExpoQueryError(scope: string, error: unknown) {
+  console.error(`[${scope}] Database query failed:`, error);
+}
+
 export async function getPublishedExpos(filter?: ExpoFilter) {
-  return prisma.expo.findMany({
-    where: getPublishedActiveWhere(filter),
-    orderBy: [{ startDate: "asc" }, { endDate: "asc" }],
-  });
+  try {
+    return await prisma.expo.findMany({
+      where: getPublishedActiveWhere(filter),
+      orderBy: [{ startDate: "asc" }, { endDate: "asc" }],
+    });
+  } catch (error) {
+    logExpoQueryError("getPublishedExpos", error);
+    return [];
+  }
 }
 
 export async function getSiteLastUpdated() {
