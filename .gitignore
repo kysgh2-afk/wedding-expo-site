@@ -2,6 +2,9 @@
 
 # dependencies
 /node_modules
+/.npm-cache/
+/.vercel-cli/
+/work/
 /.pnp
 .pnp.*
 .yarn/*
@@ -42,3 +45,5 @@ yarn-error.log*
 # uploads (keep folder, ignore files)
 /public/uploads/*
 !/public/uploads/.gitkeep
+.vercel
+tsconfig.tsbuildinfo
