@@ -1,7 +1,7 @@
 "use client";
 
 import { ExpoImage } from "@/components/ExpoImage";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   REGION_GROUPS,
@@ -10,7 +10,6 @@ import {
   getSubregionOptions,
 } from "@/lib/constants";
 import { formatInputDate } from "@/lib/date";
-import { formatTagsForInput } from "@/lib/tags";
 import { uploadImageFile } from "@/lib/upload-image";
 
 type ExpoFormData = {
@@ -68,13 +67,6 @@ export function ExpoForm({ initialData, mode }: ExpoFormProps) {
 
   const subregionOptions = getSubregionOptions(form.regionGroup);
   const needsSubregion = form.regionGroup === "metropolitan" || form.regionGroup === "local";
-
-  useEffect(() => {
-    const label = getRegionLabel(form.regionGroup, form.regionSub);
-    setForm((current) =>
-      current.regionLabel === label ? current : { ...current, regionLabel: label },
-    );
-  }, [form.regionGroup, form.regionSub]);
 
   function updateField<K extends keyof ExpoFormData>(key: K, value: ExpoFormData[K]) {
     setForm((current) => {
