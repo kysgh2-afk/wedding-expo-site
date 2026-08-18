@@ -1,9 +1,43 @@
 import { prisma } from "@/lib/prisma";
+import generatedExpoData from "@/data/expos.generated.json";
+import { getSourceExpoClickCounts } from "@/lib/clicks";
 
 type ExpoFilter = {
   regionGroup: string;
   regionSub?: string;
 };
+
+function hasDatabaseUrl() {
+  return Boolean(process.env.DATABASE_URL?.trim());
+}
+
+async function getGeneratedExpos(filter?: ExpoFilter, includeClickCounts = false) {
+  const now = new Date();
+  const clickCounts = includeClickCounts
+    ? await getSourceExpoClickCounts().catch((error) => {
+        console.error("[getGeneratedExpos] Click query failed:", error);
+        return new Map<string, number>();
+      })
+    : new Map<string, number>();
+
+  return generatedExpoData.expos
+    .filter((expo) => expo.isPublished && new Date(expo.endDate) >= now)
+    .filter((expo) => !filter?.regionGroup || expo.regionGroup === filter.regionGroup)
+    .filter((expo) => !filter?.regionSub || expo.regionSub === filter.regionSub)
+    .map((expo) => ({
+      ...expo,
+      clickCount: clickCounts.get(expo.id) ?? expo.clickCount,
+      startDate: new Date(expo.startDate),
+      endDate: new Date(expo.endDate),
+      createdAt: new Date(generatedExpoData.generatedAt),
+      updatedAt: new Date(generatedExpoData.generatedAt),
+    }))
+    .sort((a, b) => a.startDate.getTime() - b.startDate.getTime());
+}
+
+function usesGeneratedData() {
+  return process.env.EXPO_DATA_SOURCE !== "database";
+}
 
 /** Inclusive end-of-day in Asia/Seoul: hide expos only after their end date has passed. */
 export function getActiveExpoDateFilter() {
@@ -33,6 +67,9 @@ function logExpoQueryError(scope: string, error: unknown) {
 }
 
 export async function getPublishedExpos(filter?: ExpoFilter) {
+  if (usesGeneratedData()) return getGeneratedExpos(filter, true);
+  if (!hasDatabaseUrl()) return [];
+
   try {
     return await prisma.expo.findMany({
       where: getPublishedActiveWhere(filter),
@@ -40,11 +77,14 @@ export async function getPublishedExpos(filter?: ExpoFilter) {
     });
   } catch (error) {
     logExpoQueryError("getPublishedExpos", error);
-    return [];
+    return getGeneratedExpos(filter, true);
   }
 }
 
 export async function getSiteLastUpdated() {
+  if (usesGeneratedData()) return new Date(generatedExpoData.generatedAt);
+  if (!hasDatabaseUrl()) return null;
+
   try {
     const result = await prisma.expo.aggregate({
       where: getPublishedActiveWhere(),
@@ -58,6 +98,9 @@ export async function getSiteLastUpdated() {
 }
 
 export async function getRecentExposForRss(limit = 30) {
+  if (usesGeneratedData()) return (await getGeneratedExpos()).slice(0, limit);
+  if (!hasDatabaseUrl()) return [];
+
   try {
     return await prisma.expo.findMany({
       where: getPublishedActiveWhere(),
@@ -70,6 +113,22 @@ export async function getRecentExposForRss(limit = 30) {
 }
 
 export async function getPopularExpos(limit = 10) {
+  if (usesGeneratedData()) {
+    const expos = await getGeneratedExpos(undefined, true);
+
+    return expos
+      .sort((a, b) => {
+        const weeklyWeekendDiff =
+          Number(Boolean(a.isWeeklyWeekend)) - Number(Boolean(b.isWeeklyWeekend));
+        if (weeklyWeekendDiff !== 0) return weeklyWeekendDiff;
+        if (b.clickCount !== a.clickCount) return b.clickCount - a.clickCount;
+        if (a.sortOrder !== b.sortOrder) return a.sortOrder - b.sortOrder;
+        return a.startDate.getTime() - b.startDate.getTime();
+      })
+      .slice(0, limit);
+  }
+  if (!hasDatabaseUrl()) return [];
+
   try {
     return await prisma.expo.findMany({
       where: getPublishedActiveWhere(),
