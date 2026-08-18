@@ -148,7 +148,7 @@ export function ExpoCard({ expo, rank }: { expo: ExpoCardData; rank?: number }) 
       <Link
         href={expo.linkUrl}
         target="_blank"
-        rel="noopener noreferrer"
+        rel="noopener noreferrer sponsored"
         className="block h-full"
         onClick={() => trackClick(expo.id)}
       >
