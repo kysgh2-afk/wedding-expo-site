@@ -55,3 +55,83 @@ summary::-webkit-details-marker {
   text-decoration: underline;
   text-underline-offset: 2px;
 }
+
+.content-editor:empty::before {
+  content: attr(data-placeholder);
+  color: #94a3b8;
+  pointer-events: none;
+}
+
+.content-editor h2,
+.content-article h2 {
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  font-size: 1.6rem;
+  line-height: 1.4;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.content-editor h3,
+.content-article h3 {
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  font-size: 1.25rem;
+  line-height: 1.5;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.content-editor p,
+.content-article p {
+  margin: 1rem 0;
+  line-height: 1.9;
+}
+
+.content-editor ul,
+.content-editor ol,
+.content-article ul,
+.content-article ol {
+  margin: 1.25rem 0;
+  padding-left: 1.5rem;
+}
+
+.content-editor ul,
+.content-article ul { list-style: disc; }
+.content-editor ol,
+.content-article ol { list-style: decimal; }
+.content-editor li,
+.content-article li { margin: 0.4rem 0; }
+
+.content-editor blockquote,
+.content-article blockquote {
+  margin: 1.75rem 0;
+  border-left: 4px solid #fda4af;
+  background: #fff1f2;
+  padding: 1rem 1.25rem;
+  color: #475569;
+}
+
+.content-editor a,
+.content-article a {
+  color: #be123c;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.content-editor figure,
+.content-article figure { margin: 2rem 0; }
+.content-editor img,
+.content-article img {
+  width: 100%;
+  height: auto;
+  border-radius: 1rem;
+}
+.content-editor figcaption,
+.content-article figcaption {
+  margin-top: 0.6rem;
+  text-align: center;
+  font-size: 0.82rem;
+  color: #64748b;
+}

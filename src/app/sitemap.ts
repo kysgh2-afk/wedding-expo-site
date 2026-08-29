@@ -3,10 +3,12 @@ import { LEGAL_PAGES } from "@/lib/legal";
 import { ALL_REGION_PAGES, getSiteUrl } from "@/lib/regions";
 import { ALL_COST_PAGES } from "@/lib/wedding-cost";
 import { SEO_POPULAR } from "@/lib/popular";
+import { getPublishedContent } from "@/lib/content-store";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const siteUrl = getSiteUrl();
   const now = new Date();
+  const content = await getPublishedContent();
 
   return [
     {
@@ -44,5 +46,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "daily" as const,
       priority: 0.9,
     },
+    {
+      url: `${siteUrl}/content`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    ...content.map((item) => ({
+      url: `${siteUrl}/content/${item.slug}`,
+      lastModified: item.updatedAt,
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+    })),
   ];
 }
