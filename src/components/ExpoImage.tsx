@@ -12,5 +12,6 @@ function isRemoteSrc(src: ImageProps["src"]) {
  */
 export function ExpoImage(props: ImageProps) {
   const unoptimized = props.unoptimized ?? isRemoteSrc(props.src);
-  return <Image {...props} unoptimized={unoptimized} />;
+  const { alt, ...imageProps } = props;
+  return <Image {...imageProps} alt={alt} unoptimized={unoptimized} />;
 }
