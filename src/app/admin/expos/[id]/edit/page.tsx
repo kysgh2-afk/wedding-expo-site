@@ -1,6 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import { isAdminAuthenticated } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
+import { getExpoById } from "@/lib/expo-store";
 import { ExpoForm } from "@/components/admin/ExpoForm";
 import { formatInputDate } from "@/lib/date";
 import { formatTagsForInput } from "@/lib/tags";
@@ -15,7 +15,7 @@ export default async function EditExpoPage({ params }: PageProps) {
   }
 
   const { id } = await params;
-  const expo = await prisma.expo.findUnique({ where: { id } });
+  const expo = await getExpoById(id);
 
   if (!expo) {
     notFound();
