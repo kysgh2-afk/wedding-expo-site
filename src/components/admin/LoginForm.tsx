@@ -35,7 +35,7 @@ export function LoginForm() {
       <div>
         <h1 className="text-2xl font-bold text-slate-900">관리자 로그인</h1>
         <p className="mt-2 text-sm text-slate-500">
-          박람회 일정, 이미지, 링크를 등록·수정할 수 있습니다.
+          박람회 일정과 웨딩 콘텐츠를 등록·수정할 수 있습니다.
         </p>
       </div>
 
