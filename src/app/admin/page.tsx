@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { isAdminAuthenticated } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
+import { getAllExpos } from "@/lib/expo-store";
 import { AdminDashboard } from "@/components/admin/AdminDashboard";
 
 export const dynamic = "force-dynamic";
@@ -10,9 +10,9 @@ export default async function AdminPage() {
     redirect("/admin/login");
   }
 
-  const expos = await prisma.expo.findMany({
-    orderBy: [{ sortOrder: "asc" }, { startDate: "asc" }],
-  });
+  const expos = (await getAllExpos()).sort(
+    (a, b) => a.sortOrder - b.sortOrder || a.startDate.getTime() - b.startDate.getTime(),
+  );
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-rose-50 to-white px-4 py-10 sm:px-6">
