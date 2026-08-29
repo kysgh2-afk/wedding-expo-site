@@ -5,7 +5,7 @@ import { getSiteLastUpdated } from "@/lib/expos";
 import { SITE_NAME } from "@/lib/regions";
 
 const FOOTER_LINKS = [
-  { href: "/cost", label: "결혼비용" },
+  { href: "/content", label: "웨딩 콘텐츠" },
   { href: "/about", label: "사이트 소개" },
   { href: "/contact", label: "문의하기" },
   { href: "/privacy", label: "개인정보처리방침" },
