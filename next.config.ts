@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
       { source: "/index.html", destination: "/", permanent: true },
       { source: "/home", destination: "/", permanent: true },
       { source: "/main", destination: "/", permanent: true },
+      { source: "/blog", destination: "/content", permanent: true },
     ];
   },
   images: {
