@@ -16,6 +16,13 @@ function getBlobToken() {
   return token || null;
 }
 
+function hasBlobCredentials() {
+  return Boolean(
+    getBlobToken() ||
+      (process.env.BLOB_STORE_ID?.trim() && process.env.VERCEL_OIDC_TOKEN?.trim()),
+  );
+}
+
 export async function POST(request: Request) {
   try {
     if (!(await isAdminAuthenticated())) {
@@ -44,10 +51,10 @@ export async function POST(request: Request) {
     const filename = `uploads/${Date.now()}-${Math.random().toString(36).slice(2)}${ext}`;
     const blobToken = getBlobToken();
 
-    if (blobToken) {
+    if (hasBlobCredentials()) {
       const blob = await put(filename, file, {
         access: "public",
-        token: blobToken,
+        ...(blobToken ? { token: blobToken } : {}),
         contentType: file.type || undefined,
       });
       return NextResponse.json({ url: blob.url });
