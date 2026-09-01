@@ -1,7 +1,11 @@
-import { get, list, put } from "@vercel/blob";
 import sanitizeHtml from "sanitize-html";
+import {
+  hasGitHubWriteCredentials,
+  readGitHubFile,
+  writeGitHubFile,
+} from "@/lib/github-storage";
 
-const CONTENT_PREFIX = "data/content-admin/";
+const CONTENT_PATH = "data/content/content.json";
 
 export type ContentRecord = {
   id: string;
@@ -35,12 +39,10 @@ type ContentSnapshot = {
   items: Record<string, PersistedContent>;
 };
 
-function hasBlobCredentials() {
-  return Boolean(
-    process.env.BLOB_READ_WRITE_TOKEN?.trim() ||
-      (process.env.BLOB_STORE_ID?.trim() && process.env.VERCEL_OIDC_TOKEN?.trim()),
-  );
-}
+type SnapshotWithSha = {
+  snapshot: ContentSnapshot;
+  sha?: string;
+};
 
 function emptySnapshot(): ContentSnapshot {
   return { version: 1, updatedAt: new Date(0).toISOString(), items: {} };
@@ -105,50 +107,35 @@ function toPersisted(item: ContentRecord): PersistedContent {
   };
 }
 
-async function readSnapshot() {
-  if (!hasBlobCredentials()) return emptySnapshot();
+async function readSnapshot(): Promise<SnapshotWithSha> {
+  const file = await readGitHubFile(CONTENT_PATH);
+  if (!file) return { snapshot: emptySnapshot() };
 
-  let cursor: string | undefined;
-  let latest: { url: string; uploadedAt: Date } | undefined;
-
-  do {
-    const page = await list({ prefix: CONTENT_PREFIX, limit: 1000, cursor });
-    for (const blob of page.blobs) {
-      if (!latest || blob.uploadedAt > latest.uploadedAt) {
-        latest = { url: blob.url, uploadedAt: blob.uploadedAt };
-      }
-    }
-    cursor = page.hasMore ? page.cursor : undefined;
-  } while (cursor);
-
-  if (!latest) return emptySnapshot();
-  const result = await get(latest.url, { access: "public" });
-  if (!result || result.statusCode === 304 || !result.stream) return emptySnapshot();
-
-  const payload = (await new Response(result.stream).json()) as ContentSnapshot;
+  const payload = JSON.parse(file.bytes.toString("utf8")) as ContentSnapshot;
   if (payload.version !== 1 || !payload.items) {
-    throw new Error("Invalid content data in Blob storage");
+    throw new Error("GitHub의 콘텐츠 데이터 형식이 올바르지 않습니다.");
   }
-  return payload;
+  return { snapshot: payload, sha: file.sha };
 }
 
-async function writeSnapshot(snapshot: ContentSnapshot) {
-  if (!hasBlobCredentials()) throw new Error("Vercel Blob storage is not configured");
-  const updatedAt = new Date().toISOString();
-  await put(
-    `${CONTENT_PREFIX}${Date.now()}-${crypto.randomUUID()}.json`,
-    JSON.stringify({ ...snapshot, updatedAt }),
-    {
-      access: "public",
-      addRandomSuffix: false,
-      contentType: "application/json; charset=utf-8",
-      cacheControlMaxAge: 60,
-    },
+async function writeSnapshot(snapshot: ContentSnapshot, sha?: string) {
+  if (!hasGitHubWriteCredentials()) {
+    throw new Error("GitHub 콘텐츠 저장소가 연결되지 않았습니다.");
+  }
+  const payload: ContentSnapshot = {
+    ...snapshot,
+    updatedAt: new Date().toISOString(),
+  };
+  await writeGitHubFile(
+    CONTENT_PATH,
+    Buffer.from(`${JSON.stringify(payload, null, 2)}\n`, "utf8"),
+    "Update WeddingLast content",
+    sha,
   );
 }
 
 export async function getAllContent() {
-  const snapshot = await readSnapshot();
+  const { snapshot } = await readSnapshot();
   return Object.values(snapshot.items)
     .map(fromPersisted)
     .sort((a, b) => b.publishedAt.getTime() - a.publishedAt.getTime());
@@ -163,11 +150,17 @@ export async function getContentById(id: string) {
 }
 
 export async function getContentBySlug(slug: string) {
-  return (await getPublishedContent()).find((item) => item.slug === slug) ?? null;
+  let decodedSlug = slug;
+  try {
+    decodedSlug = decodeURIComponent(slug);
+  } catch {
+    // Keep the original value when a malformed escape sequence is supplied.
+  }
+  return (await getPublishedContent()).find((item) => item.slug === decodedSlug) ?? null;
 }
 
 export async function createContent(input: ContentWriteInput) {
-  const snapshot = await readSnapshot();
+  const { snapshot, sha } = await readSnapshot();
   const slug = slugifyContent(input.slug || input.title);
   if (!slug) throw new Error("주소용 이름을 입력해 주세요.");
   if (Object.values(snapshot.items).some((item) => item.slug === slug)) {
@@ -184,12 +177,12 @@ export async function createContent(input: ContentWriteInput) {
     updatedAt: now,
   };
   snapshot.items[item.id] = toPersisted(item);
-  await writeSnapshot(snapshot);
+  await writeSnapshot(snapshot, sha);
   return item;
 }
 
 export async function updateContent(id: string, input: ContentWriteInput) {
-  const snapshot = await readSnapshot();
+  const { snapshot, sha } = await readSnapshot();
   const existing = snapshot.items[id];
   if (!existing) return null;
 
@@ -208,14 +201,14 @@ export async function updateContent(id: string, input: ContentWriteInput) {
     updatedAt: new Date(),
   };
   snapshot.items[id] = toPersisted(item);
-  await writeSnapshot(snapshot);
+  await writeSnapshot(snapshot, sha);
   return item;
 }
 
 export async function deleteContent(id: string) {
-  const snapshot = await readSnapshot();
+  const { snapshot, sha } = await readSnapshot();
   if (!snapshot.items[id]) return false;
   delete snapshot.items[id];
-  await writeSnapshot(snapshot);
+  await writeSnapshot(snapshot, sha);
   return true;
 }
