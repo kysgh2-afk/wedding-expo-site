@@ -4,6 +4,7 @@ const DEFAULT_BRANCH = "main";
 type GitHubContentResponse = {
   content?: string;
   encoding?: string;
+  git_url?: string;
   sha?: string;
   message?: string;
 };
@@ -59,6 +60,38 @@ async function parseError(response: Response) {
   return message;
 }
 
+async function readLargeGitHubBlob(gitUrl: string, expectedSha: string, token: string | null) {
+  const url = new URL(gitUrl);
+  const repository = getRepository();
+  if (
+    url.protocol !== "https:" ||
+    url.hostname !== "api.github.com" ||
+    !url.pathname.startsWith(`/repos/${repository}/git/blobs/`)
+  ) {
+    throw new Error("GitHub 이미지 주소가 올바르지 않습니다.");
+  }
+
+  const response = await fetch(url, {
+    headers: {
+      Accept: "application/vnd.github+json",
+      "User-Agent": "WeddingLast-Content-Admin",
+      "X-GitHub-Api-Version": "2022-11-28",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    cache: "no-store",
+  });
+  if (!response.ok) throw new Error(await parseError(response));
+
+  const payload = (await response.json()) as GitHubContentResponse;
+  if (payload.encoding !== "base64" || typeof payload.content !== "string") {
+    throw new Error("GitHub에서 이미지 파일을 읽지 못했습니다.");
+  }
+  return {
+    bytes: Buffer.from(payload.content.replace(/\s/g, ""), "base64"),
+    sha: payload.sha || expectedSha,
+  };
+}
+
 export async function readGitHubFile(pathname: string): Promise<GitHubFile | null> {
   const token = getToken();
   const url = new URL(githubFileUrl(pathname));
@@ -77,8 +110,15 @@ export async function readGitHubFile(pathname: string): Promise<GitHubFile | nul
   if (!response.ok) throw new Error(await parseError(response));
 
   const payload = (await response.json()) as GitHubContentResponse;
-  if (!payload.sha || payload.encoding !== "base64" || typeof payload.content !== "string") {
+  if (!payload.sha) {
     throw new Error("GitHub에서 저장 파일을 읽지 못했습니다.");
+  }
+
+  // GitHub omits base64 content from the Contents API response for files over
+  // 1 MB. Fetch those files through the Git Blob endpoint instead.
+  if (payload.encoding !== "base64" || typeof payload.content !== "string") {
+    if (!payload.git_url) throw new Error("GitHub에서 이미지 파일을 읽지 못했습니다.");
+    return readLargeGitHubBlob(payload.git_url, payload.sha, token);
   }
 
   return {
