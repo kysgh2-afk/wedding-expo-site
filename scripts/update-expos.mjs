@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
+import { validateExpoData } from "./expo-data-health.mjs";
 
 const SOURCE_URL =
   process.env.EXPO_SOURCE_URL ??
@@ -234,9 +235,9 @@ try {
   // The first run has no generated file yet.
 }
 
-if (JSON.stringify(existingExpos) === JSON.stringify(expos)) {
-  console.log(`No schedule changes (${expos.length} expos).`);
-} else {
+validateExpoData(payload, { previous: { expos: existingExpos } });
+// Save successful verification time even when the source cards are unchanged.
+{
   await mkdir(dirname(OUTPUT_PATH), { recursive: true });
   await writeFile(OUTPUT_PATH, `${JSON.stringify(payload, null, 2)}\n`, "utf8");
   console.log(`Updated ${expos.length} expos in ${OUTPUT_PATH}`);

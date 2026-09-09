@@ -1,0 +1,11 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { validateExpoData } from './expo-data-health.mjs';
+const now = Date.parse('2026-09-10T00:00:00Z');
+const make = (count = 150) => ({ generatedAt: new Date(now).toISOString(), expos: Array.from({length:count}, (_,i) => ({id:String(i),title:'Expo',linkUrl:'https://example.com',isPublished:true,endDate:'2026-09-20T00:00:00Z'})) });
+test('current data passes',()=>assert.equal(validateExpoData(make(),{now}).active,150));
+test('six records blocked',()=>assert.throws(()=>validateExpoData(make(6),{now})));
+test('stale snapshot blocked',()=>assert.throws(()=>validateExpoData({...make(),generatedAt:'2026-08-08T00:00:00Z'},{now})));
+test('only six unexpired records blocked',()=>{const d=make();d.expos.slice(6).forEach(e=>e.endDate='2026-08-10T00:00:00Z');assert.throws(()=>validateExpoData(d,{now}));});
+test('large partial crawl blocked',()=>assert.throws(()=>validateExpoData(make(20),{now,previous:make()})));
+test('duplicate records blocked',()=>{const d=make();d.expos[1].id='0';assert.throws(()=>validateExpoData(d,{now}));});

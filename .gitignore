@@ -4,6 +4,7 @@
 /node_modules
 /.npm-cache/
 /.vercel-cli/
+/.gh-config/
 /work/
 /.pnp
 .pnp.*
