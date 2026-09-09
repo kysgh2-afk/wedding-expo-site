@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Noto_Sans_KR } from "next/font/google";
-import { SEO_HOME, getSiteUrl } from "@/lib/regions";
+import { SEO_HOME, getSiteUrl, SITE_NAME } from "@/lib/regions";
 import "./globals.css";
 
 const notoSansKr = Noto_Sans_KR({
@@ -11,6 +11,7 @@ const notoSansKr = Noto_Sans_KR({
 
 export const metadata: Metadata = {
   metadataBase: new URL(getSiteUrl()),
+  applicationName: SITE_NAME,
   title: {
     default: SEO_HOME.title,
     template: "%s",
@@ -31,7 +32,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "ko_KR",
-    siteName: "웨딩박람회 일정 모음",
+    siteName: SITE_NAME,
     title: SEO_HOME.title,
     description: SEO_HOME.description,
   },
