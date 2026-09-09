@@ -7,19 +7,16 @@ import { getPublishedContent } from "@/lib/content-store";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const siteUrl = getSiteUrl();
-  const now = new Date();
   const content = await getPublishedContent();
 
   return [
     {
       url: siteUrl,
-      lastModified: now,
       changeFrequency: "daily",
       priority: 1,
     },
     ...ALL_REGION_PAGES.map((page) => ({
       url: `${siteUrl}${page.path}`,
-      lastModified: now,
       changeFrequency: "daily" as const,
       priority:
         page.path.includes("/metropolitan/") ||
@@ -30,30 +27,26 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
     ...LEGAL_PAGES.map((page) => ({
       url: `${siteUrl}${page.path}`,
-      lastModified: now,
       changeFrequency: "monthly" as const,
       priority: 0.5,
     })),
     ...ALL_COST_PAGES.map((page) => ({
       url: `${siteUrl}${page.path}`,
-      lastModified: now,
       changeFrequency: "monthly" as const,
       priority: page.path === "/cost" ? 0.85 : 0.8,
     })),
     {
       url: `${siteUrl}${SEO_POPULAR.path}`,
-      lastModified: now,
       changeFrequency: "daily" as const,
       priority: 0.9,
     },
     {
       url: `${siteUrl}/content`,
-      lastModified: now,
       changeFrequency: "weekly",
       priority: 0.9,
     },
     ...content.map((item) => ({
-      url: `${siteUrl}/content/${item.slug}`,
+      url: `${siteUrl}/content/${encodeURIComponent(item.slug)}`,
       lastModified: item.updatedAt,
       changeFrequency: "monthly" as const,
       priority: 0.8,

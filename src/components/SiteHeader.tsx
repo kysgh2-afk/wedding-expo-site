@@ -2,15 +2,16 @@ import Link from "next/link";
 import { JsonLd } from "@/components/JsonLd";
 import { SEO_HOME, getSiteUrl, SITE_NAME } from "@/lib/regions";
 
-export function SiteHeader() {
+export function SiteHeader({ isHome = false }: { isHome?: boolean }) {
+  const Heading = isHome ? "h1" : "p";
   return (
     <header className="border-b border-rose-100 bg-white/90 backdrop-blur">
       <div className="mx-auto max-w-6xl px-4 py-5 sm:px-6">
         <div>
           <p className="text-sm font-medium text-rose-500">매주 업데이트</p>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+          <Heading className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
             <Link href="/">{SEO_HOME.h1}</Link>
-          </h1>
+          </Heading>
           <p className="mt-1 text-sm text-slate-500">{SEO_HOME.intro}</p>
         </div>
       </div>

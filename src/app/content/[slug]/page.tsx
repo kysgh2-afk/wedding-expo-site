@@ -15,14 +15,16 @@ export const dynamic = "force-dynamic";
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const item = await getContentBySlug(slug);
-  if (!item) return { title: "콘텐츠를 찾을 수 없습니다" };
+  if (!item) return { title: "콘텐츠를 찾을 수 없습니다", robots: { index: false } };
   const path = `/content/${item.slug}`;
+  const images = item.coverImageUrl ? [new URL(item.coverImageUrl, getSiteUrl()).href] : [];
   return {
     title: item.seoTitle || item.title,
     description: item.seoDescription || item.excerpt,
     keywords: item.keywords,
     alternates: { canonical: path },
-    openGraph: { type: "article", url: `${getSiteUrl()}${path}`, title: item.seoTitle || item.title, description: item.seoDescription || item.excerpt, publishedTime: item.publishedAt.toISOString(), modifiedTime: item.updatedAt.toISOString(), images: item.coverImageUrl ? [item.coverImageUrl] : undefined },
+    openGraph: { type: "article", siteName: SITE_NAME, locale: "ko_KR", url: `${getSiteUrl()}${path}`, title: item.seoTitle || item.title, description: item.seoDescription || item.excerpt, publishedTime: item.publishedAt.toISOString(), modifiedTime: item.updatedAt.toISOString(), images },
+    twitter: { card: images.length ? "summary_large_image" : "summary", title: item.seoTitle || item.title, description: item.seoDescription || item.excerpt, images },
   };
 }
 

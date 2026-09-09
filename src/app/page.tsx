@@ -20,7 +20,7 @@ export default async function HomePage() {
     <div className="min-h-screen bg-gradient-to-b from-rose-50 via-white to-amber-50">
       <HomeJsonLd expoCount={expos.length} />
       <HomeFaqJsonLd items={FAQ_ITEMS} />
-      <SiteHeader />
+      <SiteHeader isHome />
       <main className="mx-auto max-w-6xl space-y-10 px-4 py-10 sm:px-6">
         <RegionNav activePath="/" />
         <ExpoList expos={serializeExpos(expos)} />

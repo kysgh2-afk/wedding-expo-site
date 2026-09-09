@@ -24,7 +24,8 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  return NextResponse.redirect(new URL("/", request.url), 301);
+  // Let the router return a real 404 or apply an explicit legacy redirect.
+  return NextResponse.next();
 }
 
 export const config = {
