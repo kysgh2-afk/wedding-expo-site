@@ -15,7 +15,8 @@ function formatDate(date: Date) {
 
 export default async function ContentIndexPage() {
   const items = await getPublishedContent();
-  const cards = [COST_CONTENT_CARD, ...items.map((item) => ({ ...item, href: `/content/${item.slug}` }))];
+  const calculator = { slug: "gift-calculator", href: "/content/gift-calculator", title: "축의금 계산기", excerpt: "친밀도·참석 방법·지역·예식장·인원을 선택하고 나에게 맞는 축의금 참고 금액을 확인하세요.", category: "웨딩 계산기", publishedAt: new Date("2026-09-10T00:00:00+09:00"), coverImageUrl: null };
+  const cards = [calculator, COST_CONTENT_CARD, ...items.map((item) => ({ ...item, href: `/content/${item.slug}` }))];
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-rose-50 via-white to-rose-50/40">
@@ -34,7 +35,7 @@ export default async function ContentIndexPage() {
             {cards.map((item, index) => (
               <Link key={item.slug} href={item.href} className="group overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-rose-100 transition hover:-translate-y-1 hover:shadow-lg">
                 <div className="relative aspect-[16/9] overflow-hidden bg-gradient-to-br from-rose-100 via-pink-50 to-amber-50">
-                  {item.coverImageUrl ? <ExpoImage src={item.coverImageUrl} alt={item.title} fill className="object-cover transition duration-500 group-hover:scale-105" /> : <div className="absolute inset-0 flex items-center justify-center"><span className="text-5xl">{index === 0 ? "₩" : "♥"}</span></div>}
+                  {item.coverImageUrl ? <ExpoImage src={item.coverImageUrl} alt={item.title} fill className="object-cover transition duration-500 group-hover:scale-105" /> : <div className="absolute inset-0 flex items-center justify-center"><span className="text-5xl">{index < 2 ? "₩" : "♥"}</span></div>}
                 </div>
                 <article className="p-6"><div className="flex items-center justify-between gap-3 text-xs"><span className="rounded-full bg-rose-50 px-3 py-1 font-semibold text-rose-700">{item.category}</span><time className="text-slate-400">{formatDate(item.publishedAt)}</time></div><h3 className="mt-4 text-xl font-bold leading-snug text-slate-900 group-hover:text-rose-700">{item.title}</h3><p className="mt-3 line-clamp-3 text-sm leading-6 text-slate-600">{item.excerpt}</p><p className="mt-5 text-sm font-semibold text-rose-600">읽어보기 →</p></article>
               </Link>

@@ -10,6 +10,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const content = await getPublishedContent();
 
   return [
+    { url: `${siteUrl}/content/gift-calculator`, changeFrequency: "monthly", priority: 0.8 },
     {
       url: siteUrl,
       changeFrequency: "daily",
