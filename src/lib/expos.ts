@@ -1,9 +1,11 @@
 import { getExpoClickCounts } from "@/lib/clicks";
+import { isExpoCurrent } from "@/lib/expo-calendar.mjs";
 import {
   getAllExpos,
   getExpoStoreUpdatedAt,
   type ExpoRecord,
 } from "@/lib/expo-store";
+
 type ExpoFilter = {
   regionGroup: string;
   regionSub?: string;
@@ -19,7 +21,7 @@ async function getStoredExpos(filter?: ExpoFilter, includeClickCounts = false) {
     : new Map<string, number>();
 
   return (await getAllExpos())
-    .filter((expo) => expo.isPublished && new Date(expo.endDate) >= now)
+    .filter((expo) => expo.isPublished && isExpoCurrent(expo.endDate, now))
     .filter((expo) => !filter?.regionGroup || expo.regionGroup === filter.regionGroup)
     .filter((expo) => !filter?.regionSub || expo.regionSub === filter.regionSub)
     .map((expo) => ({

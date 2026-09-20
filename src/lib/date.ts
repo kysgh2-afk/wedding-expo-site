@@ -1,13 +1,14 @@
 import { format } from "date-fns";
 import { ko } from "date-fns/locale";
+import { koreaDay } from "@/lib/expo-calendar.mjs";
 
 const DAY_LABELS = ["일", "월", "화", "수", "목", "금", "토"];
 
 export function formatKoreanDateRange(start: Date, end: Date) {
-  const startText = format(start, "yyyy.MM.dd", { locale: ko });
-  const endText = format(end, "yyyy.MM.dd", { locale: ko });
-  const startDay = DAY_LABELS[start.getDay()];
-  const endDay = DAY_LABELS[end.getDay()];
+  const startText = koreaDay(start).replaceAll('-', '.');
+  const endText = koreaDay(end).replaceAll('-', '.');
+  const startDay = DAY_LABELS[new Date(koreaDay(start)).getUTCDay()];
+  const endDay = DAY_LABELS[new Date(koreaDay(end)).getUTCDay()];
 
   return `${startText}(${startDay}) - ${endText}(${endDay})`;
 }
@@ -24,7 +25,7 @@ export function formatExpoSchedule(
 }
 
 export function formatInputDate(date: Date) {
-  return format(date, "yyyy-MM-dd");
+  return koreaDay(date);
 }
 
 export function formatKoreanDate(date: Date) {

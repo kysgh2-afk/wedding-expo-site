@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { Suspense } from "react";
-import { formatKoreanDate } from "@/lib/date";
-import { getSiteLastUpdated } from "@/lib/expos";
+import scheduleData from "@/data/expos.generated.json";
 import { SITE_NAME } from "@/lib/regions";
 
 const FOOTER_LINKS = [
@@ -12,13 +11,14 @@ const FOOTER_LINKS = [
 ] as const;
 
 async function LastUpdatedLine() {
-  const lastUpdated = await getSiteLastUpdated();
+  const lastUpdated = new Date(scheduleData.generatedAt);
+  const stale = Date.now() - lastUpdated.getTime() > 24 * 3600000;
 
   return (
     <p className="text-center text-sm text-slate-500">
       © {new Date().getFullYear()} {SITE_NAME}
       {lastUpdated ? (
-        <> · 최종 업데이트 {formatKoreanDate(lastUpdated)}</>
+        <> · 일정 확인 {lastUpdated.toLocaleString('ko-KR', {timeZone:'Asia/Seoul', hour12:false})} (한국시간){stale ? ' · 갱신 지연: 방문 전 행사 일정을 확인해 주세요.' : ''}</>
       ) : (
         <> · 매주 업데이트</>
       )}

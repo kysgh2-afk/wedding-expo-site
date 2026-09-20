@@ -139,7 +139,7 @@ function parseSchedule(dateText) {
 
   return {
     startDate: new Date(toIsoDate(startYear, startMonth, startDay)).toISOString(),
-    endDate: new Date(toIsoDate(endYear, endMonth, endDay)).toISOString(),
+    endDate: new Date(new Date(toIsoDate(endYear, endMonth, endDay)).getTime() + 86400000 - 1).toISOString(),
     isWeeklyWeekend: false,
   };
 }

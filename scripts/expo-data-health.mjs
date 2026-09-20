@@ -1,3 +1,4 @@
+import { isExpoCurrent } from '../src/lib/expo-calendar.mjs';
 export function validateExpoData(data, { now = Date.now(), previous } = {}) {
   const age = now - Date.parse(data.generatedAt);
   if (!Number.isFinite(age) || age > 72 * 60 * 60 * 1000 || age < -3600000) {
@@ -11,7 +12,7 @@ export function validateExpoData(data, { now = Date.now(), previous } = {}) {
     }
     ids.add(expo.id);
   }
-  const active = data.expos.filter(expo => expo.isPublished && Date.parse(expo.endDate) >= now).length;
+  const active = data.expos.filter(expo => expo.isPublished && isExpoCurrent(expo.endDate, now)).length;
   if (active < 10) throw new Error(`Only ${active} active schedules; refusing to replace the working site.`);
   if (previous?.expos?.length && data.expos.length < previous.expos.length * 0.5) {
     throw new Error('Schedule count dropped by over 50%; manual review required.');
