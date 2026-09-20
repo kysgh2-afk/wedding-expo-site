@@ -2,6 +2,9 @@ import { get, list, put } from "@vercel/blob";
 import generatedExpoData from "@/data/expos.generated.json";
 
 const ADMIN_EXPO_PREFIX = "data/expos-admin/";
+const LIVE_EXPO_DATA_URL = process.env.EXPO_LIVE_DATA_URL?.trim();
+
+type GeneratedExpoData = typeof generatedExpoData;
 
 export type ExpoRecord = {
   id: string;
@@ -64,6 +67,56 @@ function emptyOverlay(): ExpoOverlay {
   };
 }
 
+function isValidGeneratedData(value: unknown): value is GeneratedExpoData {
+  if (!value || typeof value !== "object") return false;
+  const data = value as { generatedAt?: unknown; expos?: unknown };
+  if (
+    typeof data.generatedAt !== "string" ||
+    !Number.isFinite(Date.parse(data.generatedAt)) ||
+    !Array.isArray(data.expos) ||
+    data.expos.length < 10
+  ) {
+    return false;
+  }
+
+  return data.expos.every((expo) => {
+    if (!expo || typeof expo !== "object") return false;
+    const item = expo as { id?: unknown; title?: unknown; endDate?: unknown };
+    return (
+      typeof item.id === "string" &&
+      typeof item.title === "string" &&
+      typeof item.endDate === "string" &&
+      Number.isFinite(Date.parse(item.endDate))
+    );
+  });
+}
+
+async function getGeneratedExpoData(): Promise<GeneratedExpoData> {
+  if (!LIVE_EXPO_DATA_URL) return generatedExpoData;
+
+  try {
+    const liveUrl = new URL(LIVE_EXPO_DATA_URL);
+    liveUrl.searchParams.set(
+      "weddinglast_refresh",
+      String(Math.floor(Date.now() / 300_000)),
+    );
+    const response = await fetch(liveUrl, {
+      cache: "no-store",
+      signal: AbortSignal.timeout(10_000),
+    });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+    const value: unknown = await response.json();
+    if (!isValidGeneratedData(value)) {
+      throw new Error("invalid schedule payload");
+    }
+    return value;
+  } catch (error) {
+    console.error("[expo-store] Live schedule fetch failed; using bundled data:", error);
+    return generatedExpoData;
+  }
+}
+
 function toPersisted(expo: ExpoRecord): PersistedExpo {
   return {
     ...expo,
@@ -84,10 +137,10 @@ function fromPersisted(expo: PersistedExpo): ExpoRecord {
   };
 }
 
-function generatedExpos(): ExpoRecord[] {
-  const generatedAt = new Date(generatedExpoData.generatedAt);
+function generatedExpos(data: GeneratedExpoData): ExpoRecord[] {
+  const generatedAt = new Date(data.generatedAt);
 
-  return generatedExpoData.expos.map((expo) => ({
+  return data.expos.map((expo) => ({
     ...expo,
     startDate: new Date(expo.startDate),
     endDate: new Date(expo.endDate),
@@ -155,10 +208,10 @@ async function writeOverlay(overlay: ExpoOverlay) {
   return nextOverlay;
 }
 
-function mergeExpos(overlay: ExpoOverlay) {
+function mergeExpos(overlay: ExpoOverlay, data: GeneratedExpoData) {
   const deleted = new Set(overlay.deletedIds);
   const expos = new Map(
-    generatedExpos()
+    generatedExpos(data)
       .filter((expo) => !deleted.has(expo.id))
       .map((expo) => [expo.id, expo]),
   );
@@ -173,7 +226,11 @@ function mergeExpos(overlay: ExpoOverlay) {
 }
 
 export async function getAllExpos() {
-  return mergeExpos(await readOverlay());
+  const [data, overlay] = await Promise.all([
+    getGeneratedExpoData(),
+    readOverlay(),
+  ]);
+  return mergeExpos(overlay, data);
 }
 
 export async function getExpoById(id: string) {
@@ -181,7 +238,17 @@ export async function getExpoById(id: string) {
 }
 
 export async function getExpoStoreUpdatedAt() {
-  return new Date((await readOverlay()).updatedAt);
+  const [data, overlay] = await Promise.all([
+    getGeneratedExpoData(),
+    readOverlay(),
+  ]);
+  return new Date(
+    Math.max(Date.parse(data.generatedAt), Date.parse(overlay.updatedAt)),
+  );
+}
+
+export async function getGeneratedExpoUpdatedAt() {
+  return new Date((await getGeneratedExpoData()).generatedAt);
 }
 
 export async function createExpo(input: ExpoWriteInput) {
@@ -203,8 +270,11 @@ export async function createExpo(input: ExpoWriteInput) {
 }
 
 export async function updateExpo(id: string, input: ExpoWriteInput) {
-  const overlay = await readOverlay();
-  const existing = mergeExpos(overlay).find((expo) => expo.id === id);
+  const [data, overlay] = await Promise.all([
+    getGeneratedExpoData(),
+    readOverlay(),
+  ]);
+  const existing = mergeExpos(overlay, data).find((expo) => expo.id === id);
   if (!existing) return null;
 
   const expo: ExpoRecord = {
@@ -222,8 +292,11 @@ export async function updateExpo(id: string, input: ExpoWriteInput) {
 }
 
 export async function deleteExpo(id: string) {
-  const overlay = await readOverlay();
-  const exists = mergeExpos(overlay).some((expo) => expo.id === id);
+  const [data, overlay] = await Promise.all([
+    getGeneratedExpoData(),
+    readOverlay(),
+  ]);
+  const exists = mergeExpos(overlay, data).some((expo) => expo.id === id);
   if (!exists) return false;
 
   delete overlay.upserts[id];

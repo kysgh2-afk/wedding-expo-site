@@ -13,7 +13,11 @@ export function getSiteUrl() {
     }
     return url.origin;
   } catch {
-    return raw.replace(/^https?:\/\/www\./i, (match) => match.replace("www.", ""));
+    const hostname = raw.trim().replace(/^www\./i, "").replace(/\/$/, "");
+    if (/^[a-z0-9.-]+(?::\d+)?$/i.test(hostname)) {
+      return `https://${hostname}`;
+    }
+    return "https://weddinglast.com";
   }
 }
 

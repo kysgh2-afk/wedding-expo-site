@@ -6,7 +6,9 @@ import { validateExpoData } from "./expo-data-health.mjs";
 const SOURCE_URL =
   process.env.EXPO_SOURCE_URL ??
   "https://ad.cpaad.co.kr/wedunited01drc/kysgh3";
-const OUTPUT_PATH = resolve("src/data/expos.generated.json");
+const OUTPUT_PATH = resolve(
+  process.env.EXPO_OUTPUT_PATH ?? "src/data/expos.generated.json",
+);
 
 function decodeHtml(value) {
   const entities = {

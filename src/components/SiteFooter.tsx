@@ -11,7 +11,30 @@ const FOOTER_LINKS = [
 ] as const;
 
 async function LastUpdatedLine() {
-  const lastUpdated = new Date(scheduleData.generatedAt);
+  let generatedAt = scheduleData.generatedAt;
+  const liveDataUrl = process.env.EXPO_LIVE_DATA_URL?.trim();
+  if (liveDataUrl) {
+    try {
+      const liveUrl = new URL(liveDataUrl);
+      liveUrl.searchParams.set(
+        "weddinglast_refresh",
+        String(Math.floor(Date.now() / 300_000)),
+      );
+      const response = await fetch(liveUrl, { cache: "no-store" });
+      if (response.ok) {
+        const value = (await response.json()) as { generatedAt?: unknown };
+        if (
+          typeof value.generatedAt === "string" &&
+          Number.isFinite(Date.parse(value.generatedAt))
+        ) {
+          generatedAt = value.generatedAt;
+        }
+      }
+    } catch {
+      // Keep the bundled timestamp when the live feed is temporarily unavailable.
+    }
+  }
+  const lastUpdated = new Date(generatedAt);
   const stale = Date.now() - lastUpdated.getTime() > 24 * 3600000;
 
   return (

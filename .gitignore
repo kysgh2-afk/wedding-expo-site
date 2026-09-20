@@ -5,6 +5,7 @@
 /.npm-cache/
 /.vercel-cli/
 /.gh-config/
+/.cloudways-weddinglast/
 /work/
 /.pnp
 .pnp.*

@@ -2,6 +2,7 @@ import { getExpoClickCounts } from "@/lib/clicks";
 import { isExpoCurrent } from "@/lib/expo-calendar.mjs";
 import {
   getAllExpos,
+  getGeneratedExpoUpdatedAt,
   getExpoStoreUpdatedAt,
   type ExpoRecord,
 } from "@/lib/expo-store";
@@ -37,6 +38,10 @@ export async function getPublishedExpos(filter?: ExpoFilter) {
 
 export async function getSiteLastUpdated() {
   return getExpoStoreUpdatedAt();
+}
+
+export async function getScheduleSourceUpdatedAt() {
+  return getGeneratedExpoUpdatedAt();
 }
 
 export async function getRecentExposForRss(limit = 30) {
