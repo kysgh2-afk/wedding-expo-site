@@ -11,7 +11,19 @@ import { SEO_HOME, buildPageMetadata } from "@/lib/regions";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = buildPageMetadata(SEO_HOME);
+const homeMetadata = buildPageMetadata(SEO_HOME);
+const shareImage = {
+  url: "/weddinglast-share-1024.jpg",
+  width: 1024,
+  height: 1024,
+  alt: "웨딩라스트 — 전국 웨딩박람회 일정",
+};
+
+export const metadata: Metadata = {
+  ...homeMetadata,
+  openGraph: { ...homeMetadata.openGraph, images: [shareImage] },
+  twitter: { ...homeMetadata.twitter, images: [shareImage] },
+};
 
 export default async function HomePage() {
   const expos = await getPublishedExpos();
