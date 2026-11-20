@@ -116,7 +116,6 @@ export function ExpoCard({ expo, rank }: { expo: ExpoCardData; rank?: number }) 
       {imageSection}
 
       <div className="flex flex-1 flex-col gap-3 p-5">
-        {isRanked ? <p className="text-sm font-semibold text-rose-600">누적 집계 {expo.clickCount ?? 0}회</p> : null}
         <div className="flex items-center justify-between gap-2">
           <p className="text-sm font-medium text-slate-600">{dateText}</p>
           <span
