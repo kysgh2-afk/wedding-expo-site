@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import type { MetropolitanCity, LocalSubregion } from "@/lib/constants";
 
-export const SITE_NAME = "웨딩라스트";
+export const SITE_NAME = "웨딩박람회 일정 | 웨딩라스트";
 
 export function getSiteUrl() {
   const raw = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
@@ -37,7 +37,7 @@ type RegionPageBase = {
 
 export const SEO_HOME = {
   path: "/",
-  title: "웨딩라스트",
+  title: SITE_NAME,
   description:
     "웨딩라스트에서 서울·경기·광역시·지방 전국 웨딩박람회 일정을 한눈에 확인하세요. 코엑스, SETEC, 킨텍스 등 주요 박람회 무료초대권 신청 정보를 제공합니다.",
   keywords: [
@@ -49,7 +49,7 @@ export const SEO_HOME = {
     "웨딩박람회 일정",
     "전국 웨딩박람회",
   ],
-  h1: "웨딩라스트",
+  h1: SITE_NAME,
   intro:
     "전국 웨딩박람회·웨딩페어 일정과 무료초대권 신청 정보를 지역별로 확인하세요. 매주 최신 일정으로 업데이트됩니다.",
 };
