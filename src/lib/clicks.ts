@@ -14,11 +14,9 @@ export function rankExposByClicks<T extends { id: string; clickCount: number; st
 function clickStoreOptions() {
   const storeId = process.env.EXPO_CLICKS_STORE_ID?.trim() || process.env.BLOB_STORE_ID?.trim();
   const hasToken = Boolean(process.env.BLOB_READ_WRITE_TOKEN?.trim());
-  const hasOidcStore = Boolean(
-    storeId && process.env.VERCEL_OIDC_TOKEN?.trim(),
-  );
-
-  if (!hasToken && !hasOidcStore) throw new Error("Click storage is not configured");
+  // On Vercel the SDK also reads the rotating OIDC token from request context,
+  // not only process.env. Let the SDK resolve it when a store is configured.
+  if (!hasToken && !storeId) throw new Error("Click storage is not configured");
   return storeId ? { storeId } : {};
 }
 
