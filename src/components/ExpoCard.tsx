@@ -18,6 +18,7 @@ export type ExpoCardData = {
   linkUrl: string | null;
   tags: string[];
   isWeeklyWeekend?: boolean;
+  clickCount?: number;
 };
 
 function getStatusLabel(status: string) {
@@ -33,8 +34,14 @@ function getRankBadgeClass(rank: number) {
   return "bg-rose-500 text-white";
 }
 
+const pendingClicks = new Set<string>();
 function trackClick(expoId: string) {
-  void fetch(`/api/expos/${expoId}/click`, { method: "POST", keepalive: true });
+  if (pendingClicks.has(expoId)) return;
+  pendingClicks.add(expoId);
+  void fetch(`/api/expos/${expoId}/click`, { method: "POST", keepalive: true })
+    .then((response) => { if (!response.ok) console.warn("박람회 클릭 집계를 저장하지 못했습니다."); })
+    .catch(() => console.warn("박람회 클릭 집계 연결에 실패했습니다."))
+    .finally(() => pendingClicks.delete(expoId));
 }
 
 export function ExpoCard({ expo, rank }: { expo: ExpoCardData; rank?: number }) {
@@ -109,6 +116,7 @@ export function ExpoCard({ expo, rank }: { expo: ExpoCardData; rank?: number }) 
       {imageSection}
 
       <div className="flex flex-1 flex-col gap-3 p-5">
+        {isRanked ? <p className="text-sm font-semibold text-rose-600">누적 집계 {expo.clickCount ?? 0}회</p> : null}
         <div className="flex items-center justify-between gap-2">
           <p className="text-sm font-medium text-slate-600">{dateText}</p>
           <span

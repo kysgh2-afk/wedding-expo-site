@@ -1,43 +1,71 @@
+import { createHash } from "node:crypto";
 import { list, put } from "@vercel/blob";
 
 const CLICK_PREFIX = "analytics/expo-clicks/";
 const EXPO_ID_PATTERN = /^(?:source-[a-f0-9]{20}|admin-[0-9a-f-]{36})$/;
 
-function hasBlobCredentials() {
-  const hasToken = Boolean(process.env.BLOB_READ_WRITE_TOKEN?.trim());
-  const hasOidcStore = Boolean(
-    process.env.BLOB_STORE_ID?.trim() && process.env.VERCEL_OIDC_TOKEN?.trim(),
-  );
-
-  return hasToken || hasOidcStore;
+export function rankExposByClicks<T extends { id: string; clickCount: number; startDate: Date }>(expos: T[], limit: number) {
+  return [...expos].filter((expo) => expo.clickCount > 0)
+    .sort((a, b) => b.clickCount - a.clickCount ||
+      a.startDate.getTime() - b.startDate.getTime() || a.id.localeCompare(b.id))
+    .slice(0, limit);
 }
 
-export async function recordExpoClick(expoId: string) {
+function clickStoreOptions() {
+  const storeId = process.env.EXPO_CLICKS_STORE_ID?.trim() || process.env.BLOB_STORE_ID?.trim();
+  const hasToken = Boolean(process.env.BLOB_READ_WRITE_TOKEN?.trim());
+  const hasOidcStore = Boolean(
+    storeId && process.env.VERCEL_OIDC_TOKEN?.trim(),
+  );
+
+  if (!hasToken && !hasOidcStore) throw new Error("Click storage is not configured");
+  return storeId ? { storeId } : {};
+}
+
+export function clickEventPath(expoId: string, visitorId: string, now = new Date()) {
+  if (!EXPO_ID_PATTERN.test(expoId) || !/^[0-9a-f-]{36}$/i.test(visitorId)) {
+    throw new Error("Invalid click identity");
+  }
+  const day = new Date(now.getTime() + 9 * 3600000).toISOString().slice(0, 10);
+  const digest = createHash("sha256").update(`${expoId}:${visitorId}:${day}`).digest("hex");
+  return `${CLICK_PREFIX}${expoId}/daily-${day}-${digest}.txt`;
+}
+
+export async function recordExpoClick(expoId: string, visitorId: string) {
   if (!EXPO_ID_PATTERN.test(expoId)) {
     throw new Error("Invalid source expo id");
   }
 
-  if (!hasBlobCredentials()) {
-    throw new Error("Blob click storage is not configured");
+  const options = clickStoreOptions();
+  const pathname = clickEventPath(expoId, visitorId);
+  const existing = await list({ ...options, prefix: pathname, limit: 1 });
+  if (existing.blobs.some((blob) => blob.pathname === pathname)) return { counted: false };
+  try {
+    await put(pathname, "1", {
+      ...options,
+      access: "private",
+      addRandomSuffix: false,
+      allowOverwrite: false,
+      contentType: "text/plain; charset=utf-8",
+    });
+  } catch (error) {
+    // A concurrent request from the same browser may have created the same key.
+    if (error instanceof Error && /already exists/i.test(error.message)) return { counted: false };
+    throw error;
   }
-
-  const eventId = `${Date.now()}-${crypto.randomUUID()}`;
-  await put(`${CLICK_PREFIX}${expoId}/${eventId}.txt`, "1", {
-    access: "public",
-    addRandomSuffix: false,
-    contentType: "text/plain; charset=utf-8",
-  });
+  return { counted: true };
 }
 
 export async function getExpoClickCounts() {
   const counts = new Map<string, number>();
 
-  if (!hasBlobCredentials()) return counts;
+  const options = clickStoreOptions();
 
   let cursor: string | undefined;
 
   do {
     const page = await list({
+      ...options,
       prefix: CLICK_PREFIX,
       limit: 1000,
       cursor,

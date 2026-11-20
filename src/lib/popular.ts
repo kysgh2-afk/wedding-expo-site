@@ -14,7 +14,7 @@ export const SEO_POPULAR = {
     "인기 웨딩페어",
   ],
   intro:
-    "사이트 방문자들이 가장 많이 클릭한 웨딩박람회 10곳입니다. 실시간 클릭 수를 기준으로 순위가 갱신됩니다.",
+    "클릭이 저장된 진행 중 웨딩박람회를 누적 집계 순으로 최대 10곳 표시합니다. 페이지를 새로 불러오면 최신 집계를 반영합니다.",
 };
 
 export function buildPopularMetadata(): Metadata {

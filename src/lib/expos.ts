@@ -1,4 +1,4 @@
-import { getExpoClickCounts } from "@/lib/clicks";
+import { getExpoClickCounts, rankExposByClicks } from "@/lib/clicks";
 import { isExpoCurrent } from "@/lib/expo-calendar.mjs";
 import {
   getAllExpos,
@@ -49,18 +49,16 @@ export async function getRecentExposForRss(limit = 30) {
 }
 
 export async function getPopularExpos(limit = 10) {
-  const expos = await getStoredExpos(undefined, true);
-
-  return expos
-    .sort((a, b) => {
-      const weeklyWeekendDiff =
-        Number(Boolean(a.isWeeklyWeekend)) - Number(Boolean(b.isWeeklyWeekend));
-      if (weeklyWeekendDiff !== 0) return weeklyWeekendDiff;
-      if (b.clickCount !== a.clickCount) return b.clickCount - a.clickCount;
-      if (a.sortOrder !== b.sortOrder) return a.sortOrder - b.sortOrder;
-      return a.startDate.getTime() - b.startDate.getTime();
-    })
-    .slice(0, limit);
+  try {
+    const [counts, expos] = await Promise.all([getExpoClickCounts(), getStoredExpos()]);
+    const ranked = rankExposByClicks(
+      expos.map((expo) => ({ ...expo, clickCount: counts.get(expo.id) ?? 0 })), limit,
+    );
+    return { expos: ranked, status: ranked.length ? "ready" as const : "empty" as const };
+  } catch (error) {
+    console.error("[getPopularExpos] Click ranking unavailable:", error);
+    return { expos: [], status: "unavailable" as const };
+  }
 }
 
 export type { ExpoRecord };

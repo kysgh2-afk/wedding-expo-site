@@ -14,8 +14,8 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = buildPopularMetadata();
 
 export default async function PopularPage() {
-  const expos = await getPopularExpos(10);
-  const serialized = serializeExpos(expos);
+  const ranking = await getPopularExpos(10);
+  const serialized = serializeExpos(ranking.expos);
   const siteUrl = getSiteUrl();
 
   const jsonLd = {
@@ -39,7 +39,7 @@ export default async function PopularPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-rose-50 via-white to-amber-50">
-      <JsonLd data={jsonLd} />
+      {ranking.status === "ready" ? <JsonLd data={jsonLd} /> : null}
       <header className="border-b border-rose-100 bg-white/90 backdrop-blur">
         <div className="mx-auto max-w-6xl space-y-4 px-4 py-5 sm:px-6">
           <Breadcrumbs
@@ -49,7 +49,7 @@ export default async function PopularPage() {
             ]}
           />
           <div>
-            <p className="text-sm font-medium text-rose-500">클릭 수 기준 실시간 순위</p>
+            <p className="text-sm font-medium text-rose-500">저장된 클릭 집계 기준 순위</p>
             <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
               {SEO_POPULAR.h1}
             </h1>
@@ -62,14 +62,20 @@ export default async function PopularPage() {
       </header>
 
       <main className="mx-auto max-w-6xl space-y-8 px-4 py-10 sm:px-6">
-        <PopularRankingList expos={serialized} />
+        {ranking.status === "unavailable" ? (
+          <p role="status" className="rounded-2xl bg-white p-8 text-slate-600">클릭 집계를 일시적으로 불러올 수 없습니다. 잘못된 순위를 표시하지 않기 위해 순위 노출을 잠시 중단했습니다.</p>
+        ) : ranking.status === "empty" ? (
+          <p role="status" className="rounded-2xl bg-white p-8 text-slate-600">아직 클릭이 집계된 진행 중 박람회가 없습니다. 클릭이 저장되면 순위가 표시됩니다.</p>
+        ) : <PopularRankingList expos={serialized} />}
 
         <section className="rounded-2xl bg-white p-6 text-sm leading-relaxed text-slate-600 shadow-sm ring-1 ring-rose-100">
           <h2 className="text-lg font-bold text-slate-900">순위 산정 기준</h2>
           <ul className="mt-3 list-disc space-y-2 pl-5">
             <li>공개된 전국 웨딩박람회 중 <strong>방문자 클릭 수</strong>가 많은 순서입니다.</li>
-            <li>박람회 카드·신청 링크 클릭 시 집계되며, 순위는 수시로 갱신됩니다.</li>
-            <li>클릭 수가 같으면 정렬 순서·일정 시작일 순으로 정합니다.</li>
+            <li>박람회 카드·신청 링크 클릭을 저장하며, 같은 브라우저에서 같은 박람회는 한국시간 하루 1회 집계합니다. 쿠키 삭제·다른 기기 사용 시 별도 집계될 수 있습니다.</li>
+            <li>클릭이 저장된 진행 중 박람회만 표시하며, 페이지를 새로 불러오면 최신 집계를 반영합니다.</li>
+            <li>이 순위 페이지에서는 매주 토~일 개최 여부와 관계없이 클릭 수로 정렬합니다. 홈페이지·지역별 일정의 정렬 규칙은 유지합니다.</li>
+            <li>클릭 수가 같으면 일정 시작일·고유 식별자 순으로 표시합니다.</li>
           </ul>
         </section>
       </main>
