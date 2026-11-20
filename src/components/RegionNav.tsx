@@ -33,7 +33,7 @@ export function RegionNav({ activePath = "/" }: RegionNavProps) {
           전체
         </Link>
         <Link href={SEO_SEOUL.path} className={navClass(activePath === SEO_SEOUL.path)}>
-          서울
+          서울웨딩박람회
         </Link>
         <Link
           href={SEO_GYEONGGI.path}
@@ -51,7 +51,7 @@ export function RegionNav({ activePath = "/" }: RegionNavProps) {
           지방
         </Link>
         <Link href={SEO_POPULAR.path} className={navClass(activePath === SEO_POPULAR.path)}>
-          인기 순위
+          웨딩박람회 순위
         </Link>
         <Link
           href="/content"

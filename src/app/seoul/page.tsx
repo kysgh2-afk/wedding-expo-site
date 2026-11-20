@@ -17,7 +17,7 @@ export default async function SeoulPage() {
       expos={serializeExpos(expos)}
       breadcrumbs={[
         { label: "홈", href: "/" },
-        { label: "서울 웨딩박람회" },
+        { label: "서울웨딩박람회" },
       ]}
     />
   );

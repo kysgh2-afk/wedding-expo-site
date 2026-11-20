@@ -45,7 +45,7 @@ export default async function PopularPage() {
           <Breadcrumbs
             items={[
               { label: "홈", href: "/" },
-              { label: "인기 순위" },
+              { label: "웨딩박람회 순위" },
             ]}
           />
           <div>
