@@ -1,5 +1,5 @@
-import { createHash } from "node:crypto";
-import { list, put } from "@vercel/blob";
+import { createHash, randomBytes, randomUUID } from "node:crypto";
+import { del, list, put } from "@vercel/blob";
 
 const CLICK_PREFIX = "analytics/expo-clicks/";
 const EXPO_ID_PATTERN = /^(?:source-[a-f0-9]{20}|admin-[0-9a-f-]{36})$/;
@@ -81,4 +81,24 @@ export async function getExpoClickCounts() {
   } while (cursor);
 
   return counts;
+}
+
+// Administrator-only diagnostic. The random expo id is not a real listing,
+// so this test cannot enter the public ranking. Remove only its exact key.
+export async function verifyClickStorage() {
+  const id = `source-${randomBytes(10).toString("hex")}`;
+  const visitor = randomUUID();
+  const path = clickEventPath(id, visitor);
+  const options = clickStoreOptions();
+  try {
+    const first = await recordExpoClick(id, visitor);
+    const duplicate = await recordExpoClick(id, visitor);
+    const counts = await getExpoClickCounts();
+    if (!first.counted || duplicate.counted || counts.get(id) !== 1) {
+      throw new Error("Click persistence or deduplication verification failed");
+    }
+    return { write: true, read: true, deduplicated: true };
+  } finally {
+    await del(path, options);
+  }
 }
